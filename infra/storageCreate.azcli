@@ -4,9 +4,10 @@
 
 # should only ever need to do once
 
-rg=storage
+rg=vll-infra
 region=westeurope
-storageAccountName="osrstorageaccount"
+
+storageAccountName="vllstorageaccount"
 
 # create resource group
 az group create \
@@ -15,17 +16,20 @@ az group create \
 
 # create storage account
 # https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_create
+
+# standard LRS - not replicated
+# https://learn.microsoft.com/en-us/rest/api/storagerp/srp_sku_types
 az storage account create \
     --resource-group $rg \
     --name $storageAccountName \
     --kind StorageV2 \
     --sku Standard_LRS
 
-# --enable-large-file-share
-# --sku Standard_ZRS \
 
+echo "sleeping to make sure storage account is created"
+sleep 10
 
-shareName="osrshare"
+shareName="vllshare"
 
 # create file share
 # https://docs.microsoft.com/en-us/cli/azure/storage/share-rm?view=azure-cli-latest#az_storage_share_rm_create

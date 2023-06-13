@@ -81,18 +81,23 @@ sudo chown -R www-data:www-data /var/www
 sudo chmod +x /var/www
 
 # cookie keys to allow machine to restart and for it to 'remember' cookies
-# todo - store these in blob storage?
-sudo mkdir /var/cookie-keys
-sudo chown -R www-data:www-data /var/cookie-keys
+# DM ****HERE****
+# sudo mkdir /var/cookie-keys
+# sudo chown -R www-data:www-data /var/cookie-keys
 # allow read and write
-sudo chmod +rw /var/cookie-keys
+# sudo chmod +rw /var/cookie-keys
 
-# fileStores
-# sudo mkdir /tusFileStore
-# sudo chown -R www-data:www-data /tusFileStore
+# fileshare for cookies
 
 # sudo mkdir /osrFileStore
 # sudo chown -R www-data:www-data /osrFileStore
+
+sudo mkdir /mnt/vllshare
+
+# how to get the mount to survive a reboot
+# https://learn.microsoft.com/en-us/azure/storage/files/storage-how-to-use-files-linux?tabs=Ubuntu%2Csmb311#automatically-mount-file-shares
+echo "//vllstorageaccount.file.core.windows.net/vllshare /mnt/vllshare cifs nofail,credentials=/var/vllshare.cred,serverino,nosharesock,actimeo=30" | sudo tee -a /etc/fstab > /dev/null
+
 
 # https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-5.0#configure-the-firewall
 sudo apt-get install ufw
@@ -116,4 +121,7 @@ sudo chmod 644 /etc/systemd/system/kestrel.service
 # auto start on machine reboot
 sudo systemctl enable kestrel.service
 sudo systemctl restart kestrel.service
+
+
+# boot????
 
