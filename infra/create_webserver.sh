@@ -92,6 +92,9 @@ sudo chmod +x /var/www
 # sudo mkdir /osrFileStore
 # sudo chown -R www-data:www-data /osrFileStore
 
+sudo mv /home/dave/vllshare.cred /var/
+sudo chmod 777 /var/vllshare.cred
+
 sudo mkdir /mnt/vllshare
 
 # how to get the mount to survive a reboot

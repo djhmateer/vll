@@ -133,7 +133,7 @@ scp -o StrictHostKeyChecking=no ../secrets/www_hmsoftware_org.key dave@${dnsname
 
 scp -o StrictHostKeyChecking=no ../secrets/kestrel.service dave@${dnsname}.westeurope.cloudapp.azure.com:
 
-scp -o StrictHostKeyChecking=no ../secrets/vllshare.cred dave@${dnsname}.westeurope.cloudapp.azure.com:/var/
+scp -o StrictHostKeyChecking=no ../secrets/vllshare.cred dave@${dnsname}.westeurope.cloudapp.azure.com:
 
 # gets .NET, clones source code, does a release build, starts systemd kestrel service
 # systemd reads from file created on the vm above
