@@ -1,0 +1,127 @@
+#!/bin/sh
+
+# Creates Ubuntu webserver to run x.org 
+# test site is: https://hmsoftware.org/
+
+# deal with files just copied by scp from infra.azcli
+
+sudo mkdir /certs
+sudo chown -R dave:dave /certs
+sudo chmod +rw /certs
+
+cd /home/dave
+sudo mv www_hmsoftware_org.key /certs
+sudo mv www_hmsoftware_org.pem /certs
+
+
+# disable auto upgrades by apt 
+# may be okay with this pure webserver
+
+# cat <<EOT >> 20auto-upgrades
+# APT::Periodic::Update-Package-Lists "0";
+# APT::Periodic::Download-Upgradeable-Packages "0";
+# APT::Periodic::AutocleanInterval "0";
+# APT::Periodic::Unattended-Upgrade "1";
+# EOT
+
+# sudo mv /home/dave/20auto-upgrades /etc/apt/apt.conf.d/20auto-upgrades
+
+# go with newer apt which gets dependency updates too (like linux-azure)
+sudo apt update -y
+sudo apt upgrade -y
+
+  
+# Install packages for .NET for Ubutu 20.04 LTS
+# wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+# sudo dpkg -i packages-microsoft-prod.deb
+# rm packages-microsoft-prod.deb
+
+# nginx
+# we're using Kestrel as the webserver to service .NET
+# nginx as a reverse proxy for the following reasons 
+# mainly it is easily to get certs installed, and option to have multiple sites on this ip or subdomains
+# eg potentially a wordpress site for future?
+# https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/when-to-use-a-reverse-proxy?view=aspnetcore-7.0
+sudo apt-get install nginx -y
+
+# .NET 6 SDK
+# sudo apt-get update; \
+#   sudo apt-get install -y apt-transport-https && \
+#   sudo apt-get update && \
+#   sudo apt-get install -y dotnet-sdk-6.0
+
+# .NET 7.0.105 SDK
+# includes 7.0.5 runtime
+# https://learn.microsoft.com/en-gb/dotnet/core/install/linux-ubuntu-2204
+sudo apt-get install -y dotnet-sdk-7.0
+
+
+# create document root for published files 
+# it is there already with an html subdirectory
+# sudo mkdir /var/www
+
+# create gitsource folder and clone
+sudo mkdir /gitsource
+cd /gitsource
+sudo git clone https://github.com/djhmateer/vll .
+
+
+# DM HERE*************
+exit
+
+# nginx config
+# ssl certs will already be in /certs
+# copied in with create-kestrel-osr-with-secrets.sh file
+sudo cp /gitsource/infra/nginx.conf /etc/nginx/sites-available/default
+sudo nginx -s reload
+
+# compile and publish the web app
+sudo dotnet publish /gitsource/src/VLL.Web --configuration Release --output /var/www
+
+# change ownership of the published files to what it will run under
+sudo chown -R www-data:www-data /var/www
+# allow exective permissions
+sudo chmod +x /var/www
+
+# cookie keys to allow machine to restart and for it to 'remember' cookies
+# todo - store these in blob storage?
+sudo mkdir /var/osr-cookie-keys
+sudo chown -R www-data:www-data /var/osr-cookie-keys
+# allow read and write
+sudo chmod +rw /var/osr-cookie-keys
+
+# fileStores
+sudo mkdir /tusFileStore
+sudo chown -R www-data:www-data /tusFileStore
+# todo - make less
+# sudo chmod +rwx /tusFileStore
+# sudo chmod +rw /tusFileStore
+
+sudo mkdir /osrFileStore
+sudo chown -R www-data:www-data /osrFileStore
+# todo - make less
+# sudo chmod +rwx /osrFileStore
+
+# auto start on machine reboot
+sudo systemctl enable kestrel-osr.service
+
+# start the Kestrel web app using systemd using kestrel-blc.service text files
+sudo systemctl start kestrel-osr.service
+
+# https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-5.0#configure-the-firewall
+sudo apt-get install ufw
+
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+sudo ufw enable
+
+  # a nice shortcut sym link
+# sudo ln -s /usr/local/openresty/nginx/ /home/dave/nginx
+sudo ln -s /var/www/logs/ /home/dave/logs
+
+# sudo snap install bpytop
+
+# auto start the service
+sudo mv /home/dave/kestrel.service /etc/systemd/system/kestrel-osr.service

@@ -357,7 +357,6 @@ test.sh
 
 *.backup
 
-infra
 secretsRedacted
 zsrc
 
