@@ -357,6 +357,8 @@ test.sh
 
 *.backup
 
+cookie-keys
 secretsRedacted
 zsrc
+
 

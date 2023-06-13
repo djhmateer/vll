@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Serilog;
+using VLL.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +9,21 @@ builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Confi
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+var cookieKeyPath = AppConfiguration.LoadFromEnvironment().CookieKeyPath;
+
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(cookieKeyPath))
+    .SetApplicationName("CustomCookieAuthentication");
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+          .AddCookie(options =>
+          {
+              options.AccessDeniedPath = new PathString("/account/access-denied");
+              options.ReturnUrlParameter = "returnurl";
+          });
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

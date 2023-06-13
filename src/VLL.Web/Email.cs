@@ -130,7 +130,7 @@ namespace VLL.Web
         }
 
         // No templating - used for messages to admins, and not to end users
-        public static async Task<bool> Send(AAEmail osrEmail, string postmarkServerToken)
+        public static async Task<bool> Send(OSREmail osrEmail, string postmarkServerToken)
         {
             var sendViaGmail = false;
 
