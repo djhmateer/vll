@@ -98,11 +98,13 @@ sudo mv /home/dave/vllshare.cred /var/
 
 sudo mkdir /mnt/vllshare
 
-sudo chown -R www-data:www-data /mnt/vllshare/cookie-keys
 
 # how to get the mount to survive a reboot
 # https://learn.microsoft.com/en-us/azure/storage/files/storage-how-to-use-files-linux?tabs=Ubuntu%2Csmb311#automatically-mount-file-shares
 echo "//vllstorageaccount.file.core.windows.net/vllshare /mnt/vllshare cifs nofail,credentials=/var/vllshare.cred,serverino,nosharesock,actimeo=30" | sudo tee -a /etc/fstab > /dev/null
+
+# **HERE - not sure how to get write permissions for the webserver
+# sudo chown -R www-data:www-data /mnt/vllshare/cookie-keys
 
 # reload fstab
 sudo mount -a
