@@ -115,4 +115,5 @@ sudo chmod 644 /etc/systemd/system/kestrel.service
 
 # auto start on machine reboot
 sudo systemctl enable kestrel.service
+sudo systemctl restart kestrel.service
 
