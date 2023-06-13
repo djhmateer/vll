@@ -66,9 +66,6 @@ cd /gitsource
 sudo git clone https://github.com/djhmateer/vll .
 
 
-# DM HERE*************
-exit
-
 # nginx config
 # ssl certs will already be in /certs
 # copied in with create-kestrel-osr-with-secrets.sh file
@@ -85,28 +82,17 @@ sudo chmod +x /var/www
 
 # cookie keys to allow machine to restart and for it to 'remember' cookies
 # todo - store these in blob storage?
-sudo mkdir /var/osr-cookie-keys
-sudo chown -R www-data:www-data /var/osr-cookie-keys
+sudo mkdir /var/cookie-keys
+sudo chown -R www-data:www-data /var/cookie-keys
 # allow read and write
-sudo chmod +rw /var/osr-cookie-keys
+sudo chmod +rw /var/cookie-keys
 
 # fileStores
-sudo mkdir /tusFileStore
-sudo chown -R www-data:www-data /tusFileStore
-# todo - make less
-# sudo chmod +rwx /tusFileStore
-# sudo chmod +rw /tusFileStore
+# sudo mkdir /tusFileStore
+# sudo chown -R www-data:www-data /tusFileStore
 
-sudo mkdir /osrFileStore
-sudo chown -R www-data:www-data /osrFileStore
-# todo - make less
-# sudo chmod +rwx /osrFileStore
-
-# auto start on machine reboot
-sudo systemctl enable kestrel-osr.service
-
-# start the Kestrel web app using systemd using kestrel-blc.service text files
-sudo systemctl start kestrel-osr.service
+# sudo mkdir /osrFileStore
+# sudo chown -R www-data:www-data /osrFileStore
 
 # https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-5.0#configure-the-firewall
 sudo apt-get install ufw
@@ -124,4 +110,9 @@ sudo ln -s /var/www/logs/ /home/dave/logs
 # sudo snap install bpytop
 
 # auto start the service
-sudo mv /home/dave/kestrel.service /etc/systemd/system/kestrel-osr.service
+sudo mv /home/dave/kestrel.service /etc/systemd/system/kestrel.service
+sudo chmod 644 /etc/systemd/system/kestrel.service
+
+# auto start on machine reboot
+sudo systemctl enable kestrel.service
+
