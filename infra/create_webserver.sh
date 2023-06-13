@@ -93,7 +93,8 @@ sudo chmod +x /var/www
 # sudo chown -R www-data:www-data /osrFileStore
 
 sudo mv /home/dave/vllshare.cred /var/
-sudo chmod 777 /var/vllshare.cred
+# DM HERE
+# sudo chmod 777 /var/vllshare.cred
 
 sudo mkdir /mnt/vllshare
 
