@@ -10,8 +10,8 @@ sudo chown -R dave:dave /certs
 sudo chmod +rw /certs
 
 cd /home/dave
-sudo mv www_hmsoftware_org.key /certs
-sudo mv www_hmsoftware_org.pem /certs
+sudo mv *.key /certs
+sudo mv *.pem /certs
 
 
 # disable auto upgrades by apt 

@@ -124,12 +124,12 @@ n=0
 until [ "$n" -ge 5 ]
 do
 #    scp -o StrictHostKeyChecking=no ../secrets/www_hmsoftware_org.pem dave@${dnsname}.westeurope.cloudapp.azure.com:/certs/ && break
-   scp -o StrictHostKeyChecking=no ../secrets/www_hmsoftware_org.pem dave@${dnsname}.westeurope.cloudapp.azure.com: && break
+   scp -o StrictHostKeyChecking=no ../secrets/www_arlawesi_org_uk.pem dave@${dnsname}.westeurope.cloudapp.azure.com: && break
    n=$((n+1)) 
    sleep 15
 done
 
-scp -o StrictHostKeyChecking=no ../secrets/www_hmsoftware_org.key dave@${dnsname}.westeurope.cloudapp.azure.com:
+scp -o StrictHostKeyChecking=no ../secrets/www_arlawesi_org_uk.key dave@${dnsname}.westeurope.cloudapp.azure.com:
 
 scp -o StrictHostKeyChecking=no ../secrets/kestrel.service dave@${dnsname}.westeurope.cloudapp.azure.com:
 
@@ -201,10 +201,9 @@ if [ -f "$filename" ]; then
     echo "token is $token"
 
     # update DNS
-    # curl https://api.dnsimple.com/v2/63829/zones/osr4rightstools.org/records/25185791 -H "Authorization: Bearer ${token}" -H "Accept: application/json" -H "Content-Type: application/json" -X PATCH -d "$(generate_post_data)" 
-    curl https://api.dnsimple.com/v2/63829/zones/hmsoftware.org/records/29551274 -H "Authorization: Bearer ${token}" -H "Accept: application/json" -H "Content-Type: application/json" -X PATCH -d "$(generate_post_data)" 
+    curl https://api.dnsimple.com/v2/63829/zones/arlawesi.org.uk/records/45142983 -H "Authorization: Bearer ${token}" -H "Accept: application/json" -H "Content-Type: application/json" -X PATCH -d "$(generate_post_data)" 
 
-    curl https://api.dnsimple.com/v2/63829/zones/hmsoftware.org/records/29551279 -H "Authorization: Bearer ${token}" -H "Accept: application/json" -H "Content-Type: application/json" -X PATCH -d "$(generate_post_data)" 
+    curl https://api.dnsimple.com/v2/63829/zones/arlawesi.org.uk/records/45142988 -H "Authorization: Bearer ${token}" -H "Accept: application/json" -H "Content-Type: application/json" -X PATCH -d "$(generate_post_data)" 
 fi
 
 
