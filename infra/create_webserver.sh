@@ -75,10 +75,17 @@ sudo nginx -s reload
 # compile and publish the web app
 sudo dotnet publish /gitsource/src/VLL.Web --configuration Release --output /var/www
 
+# for some reason it isn't copying the email-templates folder in the publish
+# so do it manually
+sudo cp -r /gitsource/src/VLL.Web/email-templates /var/www
+
 # change ownership of the published files to what it will run under
 sudo chown -R www-data:www-data /var/www
 # allow exective permissions
 sudo chmod +x /var/www
+
+# leftover from nginx install
+sudo rm -rf /var/www/html
 
 # cookie keys to allow machine to restart and for it to 'remember' cookies
 # DM ****HERE****
