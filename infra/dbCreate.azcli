@@ -27,6 +27,7 @@ az group create \
 # public, add your client IPv4
 # to get access from desktop
 # allow access from Azure exception to allow access from the webserver
+# don't have auto pause on db (as takes a while to start back up especially from SSMS maybe a minute?)
 
 # SQL Server
 # SQL Database
