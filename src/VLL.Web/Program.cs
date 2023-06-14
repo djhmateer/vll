@@ -11,6 +11,7 @@ builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Confi
 builder.Services.AddRazorPages();
 
 var cookieKeyPath = AppConfiguration.LoadFromEnvironment().CookieKeyPath;
+Log.Information("hello and " + cookieKeyPath);
 
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(cookieKeyPath))
@@ -22,6 +23,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
               options.AccessDeniedPath = new PathString("/account/access-denied");
               options.ReturnUrlParameter = "returnurl";
           });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -42,6 +45,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
