@@ -72,5 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="insertData.sqlx" />
+    <None Include="projectToDev.scmp" />
+    <None Include="projectToLive.scmp" />
   </ItemGroup>
 </Project>

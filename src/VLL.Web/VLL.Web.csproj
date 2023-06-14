@@ -7,6 +7,64 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="email-templates\full.html" />
+    <None Remove="email-templates\html-template-bottom.html" />
+    <None Remove="email-templates\html-template-face-search-job-complete.html" />
+    <None Remove="email-templates\html-template-forgot-password.html" />
+    <None Remove="email-templates\html-template-hate-speech-job-complete.html" />
+    <None Remove="email-templates\html-template-register.html" />
+    <None Remove="email-templates\html-template-speech-parts-job-complete.html" />
+    <None Remove="email-templates\html-template-top.html" />
+    <None Remove="email-templates\text-face-search-job-complete.html" />
+    <None Remove="email-templates\text-forgot-password.html" />
+    <None Remove="email-templates\text-hate-speech-job-complete.html" />
+    <None Remove="email-templates\text-register.html" />
+    <None Remove="email-templates\text-speech-parts-job-complete.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="email-templates\full.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\html-template-bottom.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\html-template-face-search-job-complete.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\html-template-forgot-password.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\html-template-hate-speech-job-complete.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\html-template-register.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\html-template-speech-parts-job-complete.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\html-template-top.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\text-face-search-job-complete.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\text-forgot-password.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\text-hate-speech-job-complete.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\text-register.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email-templates\text-speech-parts-job-complete.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Polly" Version="7.2.3" />
     <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
@@ -18,6 +76,10 @@
   <ItemGroup>
     <Folder Include="cookie-keys\" />
     <Folder Include="logs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\admin\logins\edit.cshtml" />
   </ItemGroup>
 
 </Project>

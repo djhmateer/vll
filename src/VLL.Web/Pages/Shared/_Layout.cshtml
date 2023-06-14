@@ -45,6 +45,17 @@
                             <li class="nav-item"><a class="nav-link text-dark" href="/account/register">Register</a></li>
                         }
 
+                        @{
+                            bool isAdmin = false;
+                            var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+                            if (roles.Contains("Admin")) isAdmin = true;
+                        }
+
+                        @if (isAdmin)
+                        {
+                            <li class="nav-item"><a class="nav-link text-dark" href="/admin/index">Admin</a></li>
+                        }
+
 
 
                     </ul>
