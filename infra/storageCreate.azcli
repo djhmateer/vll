@@ -4,7 +4,7 @@
 
 # should only ever need to do once
 
-rg=virtual-legal-infra
+rg=virtual-legal-storage
 region=westeurope
 
 storageAccountName="vllstorageaccount"

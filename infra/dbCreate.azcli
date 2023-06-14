@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Create Db 
+# should only ever need to do once
+
+rg=virtual-legal-db
+region=westeurope
+
+storageAccountName="vllstorageaccount"
+
+# create resource group
+# probably don't need to do this
+az group create \
+   --name ${rg} \
+   --location ${region}
+
+
+# currently using the gui 
+# after creating the rg
+# create new SQL Database (which creates the SQL Server forr you)
+
+# experimenting with new vcore purchasing model as it is the default now 
+# old model is DTU which is fine too
+
+
+# db, craete server firewall
+# public, add your client IPv4
+# to get access from desktop
+
+# SQL Server
+# SQL Database
+
+# £4.15 per month
+# service tier = basic
+# DTU = 5
+# 2 GB max
+
+
+# possbily use commands like to do from cli
+# az sql server create -l ${region} -g ${rg} -n vllserver -u dave -p 
