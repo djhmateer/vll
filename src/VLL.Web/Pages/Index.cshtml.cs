@@ -8,8 +8,6 @@ namespace VLL.Web.Pages
     {
         public void OnGet()
         {
-            Log.Information("hello");
-
         }
     }
 }

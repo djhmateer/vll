@@ -11,7 +11,6 @@ builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Confi
 builder.Services.AddRazorPages();
 
 var cookieKeyPath = AppConfiguration.LoadFromEnvironment().CookieKeyPath;
-Log.Information("hello and " + cookieKeyPath);
 
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(cookieKeyPath))
