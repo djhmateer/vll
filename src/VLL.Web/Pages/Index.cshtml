@@ -24,7 +24,8 @@
         @foreach (var p in Model.Projects)
         {
             <div class="row">
-                <div class="col"> @p.DateTimeCreatedUtc.ToLocalTime() </div>
+                @*<div class="col"> @p.DateTimeCreatedUtc.ToLocalTime() </div>*@
+                <div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>
                 <div class="col"><a href="/projects/@p.ProjectId">@p.Name</a> </div>
             </div>
         }

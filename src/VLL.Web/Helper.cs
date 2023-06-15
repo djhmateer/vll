@@ -27,6 +27,15 @@ namespace VLL.Web
     //    }
 
     //}
+    public static class DateHelper
+    {
+        public static DateTime UtcToGmt(this DateTime dateTime)
+        {
+            // GMT Standard Time should correct for daylight savings
+            // http://www.cryer.co.uk/brian/csharp/localisation_in_a_nutshell.htm#daylight_saving
+            return TimeZoneInfo.ConvertTimeFromUtc(dateTime, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time"));
+        }
+    }
 
 
     public static class LogHelper
