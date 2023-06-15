@@ -153,7 +153,8 @@ namespace VLL.Web
     public record ProjectViewModel(
 // not nullable in db, but useful for this concept of initiating
 int? ProjectId,
-string Name
+string Name,
+DateTime DateTimeCreatedUtc
 );
 
 
@@ -971,10 +972,11 @@ string Name
             using var conn = GetOpenConnection(connectionString);
 
             var result = await conn.QueryAsyncWithRetry<ProjectViewModel>(@"
-                select ProjectId, Name 
+                select ProjectId, Name, DateTimeCreatedUtc
                 from Project 
                 where ProjectStatusId = 1
                 and IsPublic = 1
+                order by DateTimeCreatedUtc desc
                 ");
 
             return result.ToList();

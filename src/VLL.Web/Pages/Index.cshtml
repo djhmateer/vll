@@ -24,9 +24,8 @@
         @foreach (var p in Model.Projects)
         {
             <div class="row">
-                <div class="col"> @p.ProjectId </div>
-                <div class="col"> @p.Name</div>
-                <div class="col"><a href="/admin/logins/edit/@p.ProjectId">edit</a> </div>
+                <div class="col"> @p.DateTimeCreatedUtc.ToLocalTime() </div>
+                <div class="col"><a href="/projects/@p.ProjectId">@p.Name</a> </div>
             </div>
         }
     </div>
