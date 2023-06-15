@@ -60,15 +60,14 @@
     <Folder Include="dbo\Tables\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\WebLog.sql" />
-    <Build Include="dbo\Tables\VM.sql" />
     <Build Include="dbo\Tables\Role.sql" />
     <Build Include="dbo\Tables\LoginState.sql" />
     <Build Include="dbo\Tables\Login.sql" />
-    <Build Include="dbo\Tables\Log.sql" />
-    <Build Include="dbo\Tables\Job.sql" />
-    <Build Include="dbo\Tables\IPAddressInfo.sql" />
-    <Build Include="dbo\Tables\Cookie.sql" />
+    <Build Include="dbo\Tables\ProjectStatus.sql" />
+    <Build Include="dbo\Tables\ProjectLogin.sql" />
+    <Build Include="dbo\Tables\Project.sql" />
+    <Build Include="dbo\Tables\Link.sql" />
+    <Build Include="dbo\Tables\Issue.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="insertData.sqlx" />

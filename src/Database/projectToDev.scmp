@@ -337,6 +337,10 @@
         <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
+        <Name>TargetDatabaseName</Name>
+        <Value>Database</Value>
+      </PropertyElementName>
+      <PropertyElementName>
         <Name>TargetConnectionString</Name>
         <Value>Integrated Security=True;Pooling=False;Connect Timeout=30</Value>
       </PropertyElementName>

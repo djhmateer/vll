@@ -9,6 +9,10 @@ INSERT [dbo].[LoginState] ([LoginStateId], [Name]) VALUES (4, N'LockedOutDueTo3W
 GO
 INSERT [dbo].[LoginState] ([LoginStateId], [Name]) VALUES (99, N'Disabled')
 GO
+
+-- interestingly we don't use this
+-- values are hard coded in source
+-- but useful to have them here anyway in case of queries
 SET IDENTITY_INSERT [dbo].[Role] ON 
 GO
 INSERT [dbo].[Role] ([RoleId], [Name]) VALUES (1, N'Tier1')
