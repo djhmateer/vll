@@ -88,6 +88,9 @@ namespace VLL.Web
      );
 
 
+
+
+
     public record LoginAdminViewModel(
         // not nullable in db, but useful for this concept of initiating
         int? LoginId,
@@ -144,6 +147,15 @@ namespace VLL.Web
         string TextBody,
         string HtmlBody
     );
+
+    // HERE
+
+    public record ProjectViewModel(
+// not nullable in db, but useful for this concept of initiating
+int? ProjectId,
+string Name
+);
+
 
     public static class LoginStateId
     {
@@ -953,6 +965,20 @@ namespace VLL.Web
             return result.ToList();
         }
 
+        // HERE
+        public static async Task<List<ProjectViewModel>> GetAllChallengeProjects(string connectionString)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<ProjectViewModel>(@"
+                select ProjectId, Name 
+                from Project 
+                where ProjectStatusId = 1
+                and IsPublic = 1
+                ");
+
+            return result.ToList();
+        }
 
         public static class WebLogTypeId
         {

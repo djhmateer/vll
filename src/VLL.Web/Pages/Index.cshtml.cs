@@ -6,8 +6,16 @@ namespace VLL.Web.Pages
 {
     public class IndexModel : PageModel
     {
-        public void OnGet()
+        public List<ProjectViewModel> Projects { get; set; } = null!;
+
+        public async Task OnGet()
         {
+
+            var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
+            var projects = await Db.GetAllChallengeProjects(connectionString);
+            //var projectViewModels = new List<ProjectViewModel>();
+
+            Projects = projects;
         }
     }
 }

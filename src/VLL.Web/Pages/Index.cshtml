@@ -8,4 +8,27 @@
     <h1 class="display-4">Welcome to Arlawesi</h1>
     <p>Specialised technology advice and development for the UK Legal Sector</p>
     <p>Find and develop technology with a focus on regulatory issues </p>
+
+</div>
+
+
+
+<div class="text-left">
+    <h1 class="display-4">Challenges</h1>
+    <p>Most recent top 5 challenges in consideration</p>
+    <div class="container">
+        <div class="row">
+            <div class="col"> Name </div>
+        </div>
+
+        @foreach (var p in Model.Projects)
+        {
+            <div class="row">
+                <div class="col"> @p.ProjectId </div>
+                <div class="col"> @p.Name</div>
+                <div class="col"><a href="/admin/logins/edit/@p.ProjectId">edit</a> </div>
+            </div>
+        }
+    </div>
+
 </div>
