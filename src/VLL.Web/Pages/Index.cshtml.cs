@@ -10,6 +10,8 @@ namespace VLL.Web.Pages
         public List<ProjectViewModel> Ongoing { get; set; } = null!;
         public List<ProjectViewModel> Completed { get; set; } = null!;
 
+        public List<IssueViewModel> Issues { get; set; } = null!;
+
         public async Task OnGet()
         {
 
@@ -20,6 +22,8 @@ namespace VLL.Web.Pages
             Challenges = await Db.GetAllChallengeProjects(connectionString);
             Ongoing = await Db.GetAllOngoingProjects(connectionString);
             Completed = await Db.GetAllCompletedProjects(connectionString);
+
+            Issues = await Db.GetAllIssues(connectionString);
         }
     }
 }

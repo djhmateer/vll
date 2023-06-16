@@ -78,14 +78,18 @@
     <p>Top 5 <a href="/projects?status=challenge">All Issues</a></p>
     <div class="container">
         <div class="row">
-            @*<div class="col"> Issue Name </div>*@
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"><i>Referred To</i></div>
         </div>
 
-        @foreach (var p in Model.Challenges)
+        @foreach (var p in Model.Issues)
         {
             <div class="row">
                 @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
-                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
+                <div class="col"><a href="/issue/@p.IssueId">@p.Name</a> </div>
+                <div class="col">@p.Description</div>
+                <div class="col">Legal Services Board</div>
             </div>
         }
     </div>

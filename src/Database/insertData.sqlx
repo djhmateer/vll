@@ -23,3 +23,7 @@ INSERT [dbo].[Role] ([RoleId], [Name]) VALUES (9, N'Admin')
 GO
 SET IDENTITY_INSERT [dbo].[Role] OFF
 GO
+
+
+-- put in regulator data here when have good data
+

@@ -151,11 +151,18 @@ namespace VLL.Web
     // HERE
 
     public record ProjectViewModel(
-// not nullable in db, but useful for this concept of initiating
-int? ProjectId,
-string Name,
-DateTime DateTimeCreatedUtc
-);
+     // not nullable in db, but useful for this concept of initiating
+     int? ProjectId,
+     string Name,
+     DateTime DateTimeCreatedUtc
+    );
+
+     public record IssueViewModel(
+     // not nullable in db, but useful for this concept of initiating
+     int? IssueId,
+     string Name,
+     string Description
+     );
 
 
     public static class LoginStateId
@@ -1011,6 +1018,20 @@ DateTime DateTimeCreatedUtc
 
             return result.ToList();
         }
+
+        public static async Task<List<IssueViewModel>> GetAllIssues(string connectionString)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<IssueViewModel>(@"
+                select IssueId, Name, Description
+                from Issue 
+                order by DateTimeCreatedUtc desc
+                ");
+
+            return result.ToList();
+        }
+
 
         public static class WebLogTypeId
         {
