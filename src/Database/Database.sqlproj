@@ -74,5 +74,6 @@
     <None Include="insertData.sqlx" />
     <None Include="projectToDev.scmp" />
     <None Include="projectToLive.scmp" />
+    <None Include="devFullData.sqlx" />
   </ItemGroup>
 </Project>

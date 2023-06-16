@@ -164,6 +164,18 @@ namespace VLL.Web
      string Description
      );
 
+    public record ProjectFullViewModel(
+ int? ProjectId,
+ string Name,
+ int ProjectStatusId,
+ bool IsPublic,
+ int PromoterLoginId,
+ string? Description,
+ string? Keywords,
+ string? ResearchNotes,
+ DateTime DateTimeCreatedUtc
+);
+
 
     public static class LoginStateId
     {
@@ -1026,6 +1038,24 @@ namespace VLL.Web
             var result = await conn.QueryAsyncWithRetry<IssueViewModel>(@"
                 select IssueId, Name, Description
                 from Issue 
+                order by DateTimeCreatedUtc desc
+                ");
+
+            return result.ToList();
+        }
+
+        // used in /projects
+        public static async Task<List<ProjectFullViewModel>> GetAllProjects(string connectionString)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(@"
+                select *
+                from Project 
+                -- **PUT IN FILTER
+                --where ProjectStatusId = 3
+                -- **FILTER**
+                where IsPublic = 1
                 order by DateTimeCreatedUtc desc
                 ");
 
