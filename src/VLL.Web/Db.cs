@@ -982,6 +982,36 @@ DateTime DateTimeCreatedUtc
             return result.ToList();
         }
 
+        public static async Task<List<ProjectViewModel>> GetAllOngoingProjects(string connectionString)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<ProjectViewModel>(@"
+                select ProjectId, Name, DateTimeCreatedUtc
+                from Project 
+                where ProjectStatusId = 2
+                and IsPublic = 1
+                order by DateTimeCreatedUtc desc
+                ");
+
+            return result.ToList();
+        }
+
+        public static async Task<List<ProjectViewModel>> GetAllCompletedProjects(string connectionString)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<ProjectViewModel>(@"
+                select ProjectId, Name, DateTimeCreatedUtc
+                from Project 
+                where ProjectStatusId = 3
+                and IsPublic = 1
+                order by DateTimeCreatedUtc desc
+                ");
+
+            return result.ToList();
+        }
+
         public static class WebLogTypeId
         {
             public const int Page = 1;

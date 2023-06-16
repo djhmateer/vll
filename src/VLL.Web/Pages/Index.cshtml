@@ -15,20 +15,79 @@
 
 <div class="text-left">
     <h1 class="display-4">Challenges</h1>
-    <p>Most recent top 5 challenges in consideration</p>
+    <p>Most recent top 5 challenges in consideration. <a href="/projects?status=challenge">All Challenges</a></p>
     <div class="container">
         <div class="row">
-            <div class="col"> Name </div>
+           @* <div class="col"> Name </div>*@
         </div>
 
-        @foreach (var p in Model.Projects)
+        @foreach (var p in Model.Challenges)
         {
             <div class="row">
-                @*<div class="col"> @p.DateTimeCreatedUtc.ToLocalTime() </div>*@
-                <div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>
-                <div class="col"><a href="/projects/@p.ProjectId">@p.Name</a> </div>
+                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
+                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
             </div>
         }
     </div>
-
 </div>
+
+<p></p>
+
+<div class="text-left">
+    <h1 class="display-4">Ongoing Projects</h1>
+    <p>Top 5 <a href="/projects?status=challenge">All Ongoing</a></p>
+    <div class="container">
+        <div class="row">
+          @*  <div class="col"> Name </div>*@
+        </div>
+
+        @foreach (var p in Model.Ongoing)
+        {
+            <div class="row">
+                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
+                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
+            </div>
+        }
+    </div>
+</div>
+
+<p></p>
+
+<div class="text-left">
+    <h1 class="display-4">Completed Projects</h1>
+    <p>Top 5 <a href="/projects?status=challenge">All Completed</a></p>
+    <div class="container">
+        <div class="row">
+            @*<div class="col"> Name </div>*@
+        </div>
+
+        @foreach (var p in Model.Completed)
+        {
+            <div class="row">
+                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
+                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
+            </div>
+        }
+    </div>
+</div>
+
+<p></p>
+
+<div class="text-left">
+    <h1 class="display-4">Regulatory Issue Map</h1>
+    <p>Top 5 <a href="/projects?status=challenge">All Issues</a></p>
+    <div class="container">
+        <div class="row">
+            @*<div class="col"> Issue Name </div>*@
+        </div>
+
+        @foreach (var p in Model.Challenges)
+        {
+            <div class="row">
+                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
+                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
+            </div>
+        }
+    </div>
+</div>
+
