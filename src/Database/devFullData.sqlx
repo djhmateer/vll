@@ -1,0 +1,340 @@
+USE [vll]
+GO
+ALTER TABLE [dbo].[ProjectLogin] DROP CONSTRAINT [FK_ProjectLogin_Project]
+GO
+ALTER TABLE [dbo].[ProjectLogin] DROP CONSTRAINT [FK_ProjectLogin_Login]
+GO
+ALTER TABLE [dbo].[Project] DROP CONSTRAINT [FK_Project_ProjectStatus]
+GO
+ALTER TABLE [dbo].[Login] DROP CONSTRAINT [FK_Login_LoginState]
+GO
+ALTER TABLE [dbo].[Link] DROP CONSTRAINT [FK_Link_Project]
+GO
+ALTER TABLE [dbo].[Issue] DROP CONSTRAINT [FK_Issue_Regulator]
+GO
+ALTER TABLE [dbo].[Issue] DROP CONSTRAINT [FK_Issue_Project]
+GO
+ALTER TABLE [dbo].[Project] DROP CONSTRAINT [DF_Project_DateTimeCreatedUtc]
+GO
+ALTER TABLE [dbo].[Login] DROP CONSTRAINT [DF_Login_DateTimeCreated]
+GO
+ALTER TABLE [dbo].[Login] DROP CONSTRAINT [DF_Login_Email2FAFailedAttempts]
+GO
+ALTER TABLE [dbo].[Login] DROP CONSTRAINT [DF_Login_EmailFailedPasswordAttempts]
+GO
+ALTER TABLE [dbo].[Issue] DROP CONSTRAINT [DF_Issue_DateTimeCreatedUtc]
+GO
+/****** Object:  Table [dbo].[Role]    Script Date: 16/06/2023 12:15:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Role]') AND type in (N'U'))
+DROP TABLE [dbo].[Role]
+GO
+/****** Object:  Table [dbo].[Regulator]    Script Date: 16/06/2023 12:15:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Regulator]') AND type in (N'U'))
+DROP TABLE [dbo].[Regulator]
+GO
+/****** Object:  Table [dbo].[ProjectStatus]    Script Date: 16/06/2023 12:15:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProjectStatus]') AND type in (N'U'))
+DROP TABLE [dbo].[ProjectStatus]
+GO
+/****** Object:  Table [dbo].[ProjectLogin]    Script Date: 16/06/2023 12:15:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProjectLogin]') AND type in (N'U'))
+DROP TABLE [dbo].[ProjectLogin]
+GO
+/****** Object:  Table [dbo].[Project]    Script Date: 16/06/2023 12:15:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Project]') AND type in (N'U'))
+DROP TABLE [dbo].[Project]
+GO
+/****** Object:  Table [dbo].[LoginState]    Script Date: 16/06/2023 12:15:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[LoginState]') AND type in (N'U'))
+DROP TABLE [dbo].[LoginState]
+GO
+/****** Object:  Table [dbo].[Login]    Script Date: 16/06/2023 12:15:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Login]') AND type in (N'U'))
+DROP TABLE [dbo].[Login]
+GO
+/****** Object:  Table [dbo].[Link]    Script Date: 16/06/2023 12:15:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Link]') AND type in (N'U'))
+DROP TABLE [dbo].[Link]
+GO
+/****** Object:  Table [dbo].[Issue]    Script Date: 16/06/2023 12:15:10 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Issue]') AND type in (N'U'))
+DROP TABLE [dbo].[Issue]
+GO
+/****** Object:  Table [dbo].[Issue]    Script Date: 16/06/2023 12:15:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Issue](
+	[IssueId] [int] IDENTITY(1,1) NOT NULL,
+	[ProjectId] [int] NOT NULL,
+	[RegulatorId] [int] NULL,
+	[Name] [nvarchar](255) NOT NULL,
+	[Description] [nvarchar](max) NULL,
+	[Keywords] [nvarchar](max) NULL,
+	[Response] [nvarchar](max) NULL,
+	[DateTimeCreatedUtc] [datetime2](7) NULL,
+ CONSTRAINT [PK_Issue] PRIMARY KEY CLUSTERED 
+(
+	[IssueId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Link]    Script Date: 16/06/2023 12:15:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Link](
+	[LinkId] [int] IDENTITY(1,1) NOT NULL,
+	[ProjectId] [int] NOT NULL,
+	[Url] [nvarchar](max) NOT NULL,
+	[Description] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Link] PRIMARY KEY CLUSTERED 
+(
+	[LinkId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Login]    Script Date: 16/06/2023 12:15:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Login](
+	[LoginId] [int] IDENTITY(1,1) NOT NULL,
+	[Email] [nvarchar](max) NOT NULL,
+	[PasswordHash] [nvarchar](max) NOT NULL,
+	[RoleId] [int] NULL,
+	[LoginStateId] [int] NOT NULL,
+	[PasswordFailedAttempts] [int] NOT NULL,
+	[PasswordResetVerificationCode] [uniqueidentifier] NULL,
+	[PasswordResetVerificationSentDateTimeUtc] [datetime2](7) NULL,
+	[MfaFailedAttempts] [int] NOT NULL,
+	[MfaCode] [int] NULL,
+	[MfaSentDateTimeUtc] [datetime2](7) NULL,
+	[EmailAddressConfirmationCode] [uniqueidentifier] NULL,
+	[DateTimeUtcCreated] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_Login] PRIMARY KEY CLUSTERED 
+(
+	[LoginId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[LoginState]    Script Date: 16/06/2023 12:15:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[LoginState](
+	[LoginStateId] [int] NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_LoginState] PRIMARY KEY CLUSTERED 
+(
+	[LoginStateId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Project]    Script Date: 16/06/2023 12:15:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Project](
+	[ProjectId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](255) NOT NULL,
+	[ProjectStatusId] [int] NOT NULL,
+	[IsPublic] [bit] NOT NULL,
+	[PromoterLoginId] [int] NULL,
+	[Description] [nvarchar](max) NULL,
+	[Keywords] [nvarchar](max) NULL,
+	[ResearchNotes] [nvarchar](max) NULL,
+	[DateTimeCreatedUtc] [datetime2](7) NULL,
+ CONSTRAINT [PK_Project] PRIMARY KEY CLUSTERED 
+(
+	[ProjectId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ProjectLogin]    Script Date: 16/06/2023 12:15:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ProjectLogin](
+	[ProjectLoginId] [int] IDENTITY(1,1) NOT NULL,
+	[ProjectId] [int] NOT NULL,
+	[LoginId] [int] NOT NULL,
+ CONSTRAINT [PK_ProjectLogin] PRIMARY KEY CLUSTERED 
+(
+	[ProjectLoginId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ProjectStatus]    Script Date: 16/06/2023 12:15:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ProjectStatus](
+	[ProjectStatusId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_ProjectStatus] PRIMARY KEY CLUSTERED 
+(
+	[ProjectStatusId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Regulator]    Script Date: 16/06/2023 12:15:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Regulator](
+	[RegulatorId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](255) NOT NULL,
+	[ContactEmail] [nvarchar](255) NULL,
+ CONSTRAINT [PK_Regulator] PRIMARY KEY CLUSTERED 
+(
+	[RegulatorId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Role]    Script Date: 16/06/2023 12:15:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Role](
+	[RoleId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_Role] PRIMARY KEY CLUSTERED 
+(
+	[RoleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[Issue] ON 
+GO
+INSERT [dbo].[Issue] ([IssueId], [ProjectId], [RegulatorId], [Name], [Description], [Keywords], [Response], [DateTimeCreatedUtc]) VALUES (1, 9, NULL, N'Wordpress issue', N'sample WP description', N'wordpress', NULL, CAST(N'2023-06-16T10:40:25.9466667' AS DateTime2))
+GO
+INSERT [dbo].[Issue] ([IssueId], [ProjectId], [RegulatorId], [Name], [Description], [Keywords], [Response], [DateTimeCreatedUtc]) VALUES (9, 9, 2, N'Wordpress issue 2', N'sample WP description 2', N'wordpress, tech', NULL, CAST(N'2023-06-16T10:53:07.3300000' AS DateTime2))
+GO
+INSERT [dbo].[Issue] ([IssueId], [ProjectId], [RegulatorId], [Name], [Description], [Keywords], [Response], [DateTimeCreatedUtc]) VALUES (10, 10, NULL, N'Cyber Issue', N'sample cyber with a bit more detail here which may be interesting, but perhaps we need to cut off some of the text on the homepage', N'cyber, security', NULL, CAST(N'2023-06-16T10:54:46.9266667' AS DateTime2))
+GO
+SET IDENTITY_INSERT [dbo].[Issue] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Login] ON 
+GO
+INSERT [dbo].[Login] ([LoginId], [Email], [PasswordHash], [RoleId], [LoginStateId], [PasswordFailedAttempts], [PasswordResetVerificationCode], [PasswordResetVerificationSentDateTimeUtc], [MfaFailedAttempts], [MfaCode], [MfaSentDateTimeUtc], [EmailAddressConfirmationCode], [DateTimeUtcCreated]) VALUES (11, N'davemateer@gmail.com', N'10000.FDg1Madi1dAZeWX+/lg2vg==.jdseozs9ptPigObF/EYtggS1bCsfAbpuNRUZS6Q/Kgw=', 9, 2, 0, NULL, NULL, 0, NULL, NULL, NULL, CAST(N'2023-06-14T12:06:54.1000000' AS DateTime2))
+GO
+SET IDENTITY_INSERT [dbo].[Login] OFF
+GO
+INSERT [dbo].[LoginState] ([LoginStateId], [Name]) VALUES (1, N'WaitingToBeInitiallyVerifiedByEmail')
+GO
+INSERT [dbo].[LoginState] ([LoginStateId], [Name]) VALUES (2, N'InUse')
+GO
+INSERT [dbo].[LoginState] ([LoginStateId], [Name]) VALUES (3, N'PasswordResetCodeSent')
+GO
+INSERT [dbo].[LoginState] ([LoginStateId], [Name]) VALUES (4, N'LockedOutDueTo3WrongPasswords')
+GO
+INSERT [dbo].[LoginState] ([LoginStateId], [Name]) VALUES (99, N'Disabled')
+GO
+SET IDENTITY_INSERT [dbo].[Project] ON 
+GO
+INSERT [dbo].[Project] ([ProjectId], [Name], [ProjectStatusId], [IsPublic], [PromoterLoginId], [Description], [Keywords], [ResearchNotes], [DateTimeCreatedUtc]) VALUES (1, N'Website compliance tool for UK Law Firms', 1, 1, NULL, NULL, NULL, NULL, CAST(N'2023-06-15T12:14:37.8666667' AS DateTime2))
+GO
+INSERT [dbo].[Project] ([ProjectId], [Name], [ProjectStatusId], [IsPublic], [PromoterLoginId], [Description], [Keywords], [ResearchNotes], [DateTimeCreatedUtc]) VALUES (2, N'Google Docs for UK Law Firms review', 1, 1, NULL, NULL, NULL, NULL, CAST(N'2023-06-15T12:15:37.8666667' AS DateTime2))
+GO
+INSERT [dbo].[Project] ([ProjectId], [Name], [ProjectStatusId], [IsPublic], [PromoterLoginId], [Description], [Keywords], [ResearchNotes], [DateTimeCreatedUtc]) VALUES (4, N'Document Signing alternatives', 1, 1, NULL, NULL, NULL, NULL, CAST(N'2023-06-15T12:17:37.8666667' AS DateTime2))
+GO
+INSERT [dbo].[Project] ([ProjectId], [Name], [ProjectStatusId], [IsPublic], [PromoterLoginId], [Description], [Keywords], [ResearchNotes], [DateTimeCreatedUtc]) VALUES (5, N'Time recording systems', 2, 1, NULL, NULL, NULL, NULL, CAST(N'2023-06-15T12:25:37.8666667' AS DateTime2))
+GO
+INSERT [dbo].[Project] ([ProjectId], [Name], [ProjectStatusId], [IsPublic], [PromoterLoginId], [Description], [Keywords], [ResearchNotes], [DateTimeCreatedUtc]) VALUES (6, N'Data protection laws review', 2, 1, NULL, NULL, NULL, NULL, CAST(N'2023-06-16T10:16:48.3033333' AS DateTime2))
+GO
+INSERT [dbo].[Project] ([ProjectId], [Name], [ProjectStatusId], [IsPublic], [PromoterLoginId], [Description], [Keywords], [ResearchNotes], [DateTimeCreatedUtc]) VALUES (7, N'Word templates for UK Law Firms', 3, 1, NULL, NULL, NULL, NULL, CAST(N'2023-06-16T10:17:24.4433333' AS DateTime2))
+GO
+INSERT [dbo].[Project] ([ProjectId], [Name], [ProjectStatusId], [IsPublic], [PromoterLoginId], [Description], [Keywords], [ResearchNotes], [DateTimeCreatedUtc]) VALUES (8, N'Laptop security for uk law firms', 3, 1, NULL, NULL, NULL, NULL, CAST(N'2023-06-16T10:17:37.9666667' AS DateTime2))
+GO
+INSERT [dbo].[Project] ([ProjectId], [Name], [ProjectStatusId], [IsPublic], [PromoterLoginId], [Description], [Keywords], [ResearchNotes], [DateTimeCreatedUtc]) VALUES (9, N'Wordpress template for law firm', 3, 1, NULL, NULL, NULL, NULL, CAST(N'2023-06-16T10:17:49.6233333' AS DateTime2))
+GO
+INSERT [dbo].[Project] ([ProjectId], [Name], [ProjectStatusId], [IsPublic], [PromoterLoginId], [Description], [Keywords], [ResearchNotes], [DateTimeCreatedUtc]) VALUES (10, N'Cyber essentials for UK law firms', 3, 1, NULL, NULL, NULL, NULL, CAST(N'2023-06-16T10:17:56.9600000' AS DateTime2))
+GO
+SET IDENTITY_INSERT [dbo].[Project] OFF
+GO
+SET IDENTITY_INSERT [dbo].[ProjectStatus] ON 
+GO
+INSERT [dbo].[ProjectStatus] ([ProjectStatusId], [Name]) VALUES (1, N'Challenge')
+GO
+INSERT [dbo].[ProjectStatus] ([ProjectStatusId], [Name]) VALUES (2, N'Ongoing')
+GO
+INSERT [dbo].[ProjectStatus] ([ProjectStatusId], [Name]) VALUES (3, N'Completed')
+GO
+SET IDENTITY_INSERT [dbo].[ProjectStatus] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Regulator] ON 
+GO
+INSERT [dbo].[Regulator] ([RegulatorId], [Name], [ContactEmail]) VALUES (1, N'Solicitors Regulator', NULL)
+GO
+INSERT [dbo].[Regulator] ([RegulatorId], [Name], [ContactEmail]) VALUES (2, N'IPO', NULL)
+GO
+INSERT [dbo].[Regulator] ([RegulatorId], [Name], [ContactEmail]) VALUES (3, N'Legal Services Board', NULL)
+GO
+SET IDENTITY_INSERT [dbo].[Regulator] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Role] ON 
+GO
+INSERT [dbo].[Role] ([RoleId], [Name]) VALUES (1, N'Tier1')
+GO
+INSERT [dbo].[Role] ([RoleId], [Name]) VALUES (2, N'Tier2')
+GO
+INSERT [dbo].[Role] ([RoleId], [Name]) VALUES (9, N'Admin')
+GO
+SET IDENTITY_INSERT [dbo].[Role] OFF
+GO
+ALTER TABLE [dbo].[Issue] ADD  CONSTRAINT [DF_Issue_DateTimeCreatedUtc]  DEFAULT (getutcdate()) FOR [DateTimeCreatedUtc]
+GO
+ALTER TABLE [dbo].[Login] ADD  CONSTRAINT [DF_Login_EmailFailedPasswordAttempts]  DEFAULT ((0)) FOR [PasswordFailedAttempts]
+GO
+ALTER TABLE [dbo].[Login] ADD  CONSTRAINT [DF_Login_Email2FAFailedAttempts]  DEFAULT ((0)) FOR [MfaFailedAttempts]
+GO
+ALTER TABLE [dbo].[Login] ADD  CONSTRAINT [DF_Login_DateTimeCreated]  DEFAULT (getutcdate()) FOR [DateTimeUtcCreated]
+GO
+ALTER TABLE [dbo].[Project] ADD  CONSTRAINT [DF_Project_DateTimeCreatedUtc]  DEFAULT (getutcdate()) FOR [DateTimeCreatedUtc]
+GO
+ALTER TABLE [dbo].[Issue]  WITH CHECK ADD  CONSTRAINT [FK_Issue_Project] FOREIGN KEY([ProjectId])
+REFERENCES [dbo].[Project] ([ProjectId])
+GO
+ALTER TABLE [dbo].[Issue] CHECK CONSTRAINT [FK_Issue_Project]
+GO
+ALTER TABLE [dbo].[Issue]  WITH CHECK ADD  CONSTRAINT [FK_Issue_Regulator] FOREIGN KEY([RegulatorId])
+REFERENCES [dbo].[Regulator] ([RegulatorId])
+GO
+ALTER TABLE [dbo].[Issue] CHECK CONSTRAINT [FK_Issue_Regulator]
+GO
+ALTER TABLE [dbo].[Link]  WITH CHECK ADD  CONSTRAINT [FK_Link_Project] FOREIGN KEY([ProjectId])
+REFERENCES [dbo].[Project] ([ProjectId])
+GO
+ALTER TABLE [dbo].[Link] CHECK CONSTRAINT [FK_Link_Project]
+GO
+ALTER TABLE [dbo].[Login]  WITH CHECK ADD  CONSTRAINT [FK_Login_LoginState] FOREIGN KEY([LoginStateId])
+REFERENCES [dbo].[LoginState] ([LoginStateId])
+GO
+ALTER TABLE [dbo].[Login] CHECK CONSTRAINT [FK_Login_LoginState]
+GO
+ALTER TABLE [dbo].[Project]  WITH CHECK ADD  CONSTRAINT [FK_Project_ProjectStatus] FOREIGN KEY([ProjectStatusId])
+REFERENCES [dbo].[ProjectStatus] ([ProjectStatusId])
+GO
+ALTER TABLE [dbo].[Project] CHECK CONSTRAINT [FK_Project_ProjectStatus]
+GO
+ALTER TABLE [dbo].[ProjectLogin]  WITH CHECK ADD  CONSTRAINT [FK_ProjectLogin_Login] FOREIGN KEY([LoginId])
+REFERENCES [dbo].[Login] ([LoginId])
+GO
+ALTER TABLE [dbo].[ProjectLogin] CHECK CONSTRAINT [FK_ProjectLogin_Login]
+GO
+ALTER TABLE [dbo].[ProjectLogin]  WITH CHECK ADD  CONSTRAINT [FK_ProjectLogin_Project] FOREIGN KEY([ProjectId])
+REFERENCES [dbo].[Project] ([ProjectId])
+GO
+ALTER TABLE [dbo].[ProjectLogin] CHECK CONSTRAINT [FK_ProjectLogin_Project]
+GO
+
