@@ -19,6 +19,7 @@ az group create \
 # after creating the rg
 # create new SQL Database (which creates the SQL Server for you)
 
+# **VCore was more expensive** - way more.
 # experimenting with new vcore purchasing model as it is the default now 
 # old model is DTU which is fine too
 

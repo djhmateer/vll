@@ -157,12 +157,12 @@ namespace VLL.Web
      DateTime DateTimeCreatedUtc
     );
 
-     public record IssueViewModel(
-     // not nullable in db, but useful for this concept of initiating
-     int? IssueId,
-     string Name,
-     string Description
-     );
+    public record IssueViewModel(
+    // not nullable in db, but useful for this concept of initiating
+    int? IssueId,
+    string Name,
+    string Description
+    );
 
     public record ProjectFullViewModel(
  int? ProjectId,
@@ -1061,6 +1061,23 @@ namespace VLL.Web
 
             return result.ToList();
         }
+
+        // /project/2
+        public static async Task<ProjectFullViewModel> GetProjectByProjectId(string connectionString, int projectId)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(@"
+                select *
+                from Project 
+                where ProjectId = @ProjectId
+                ", new { projectId });
+
+            return result.SingleOrDefault();
+        }
+
+        //**HRE put in Peroject
+        //GetProjectByProjectId
 
 
         public static class WebLogTypeId
