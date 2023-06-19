@@ -6,20 +6,42 @@
 }*@
 
 <div class="container-tool">
-    <p>projectId: @Model.ProjectFullViewModel.ProjectId</p>
-    <p>Name: @Model.ProjectFullViewModel.Name</p>
-    <p>ProjectStatusId: @Model.ProjectFullViewModel.ProjectStatusId</p>
-    <p>IsPublic: @Model.ProjectFullViewModel.IsPublic</p>
-    <p>PromoterLoginId: @Model.ProjectFullViewModel.PromoterLoginId</p>
-    <p>Description: @Model.ProjectFullViewModel.Description</p>
-    <p>Keywords: @Model.ProjectFullViewModel.Keywords</p>
-    <p>ResearchNotes: @Model.ProjectFullViewModel.ResearchNotes</p>
-    <p>DateTimeCreated: @Model.ProjectFullViewModel.DateTimeCreatedUtc.UtcToGmt()</p>
+	<h2>Project Details</h2>
+	<p>Project Logo / Images?</p>
+	@*<img src="https://davemateer.com/assets/2022-05-19/1.jpg" width="200" />*@
+	<img src="https://davemateer.com/assets/2021-10-22/email-cover.jpg" width="400" />
 
+	<p>projectId: @Model.ProjectFullViewModel.ProjectId</p>
+	<p>Name: @Model.ProjectFullViewModel.Name</p>
+	<p>ProjectStatusId: @Model.ProjectFullViewModel.ProjectStatusId</p>
+	<p>IsPublic: @Model.ProjectFullViewModel.IsPublic</p>
+	<p>PromoterLoginId: @Model.ProjectFullViewModel.PromoterLoginId</p>
+	<p>Description: @Model.ProjectFullViewModel.Description</p>
+	<p>Keywords: @Model.ProjectFullViewModel.Keywords</p>
+	<p>ResearchNotes: @Model.ProjectFullViewModel.ResearchNotes</p>
+	<p>DateTimeCreated: @Model.ProjectFullViewModel.DateTimeCreatedUtc.UtcToGmt()</p>
 </div>
 
+<div class="container-tool">
+	<h2>Project Members</h2>
+	<p>Promoter - name, email, contact details, institution</p>
+</div>
+
+<div class="container-tool">
+	<h2>Project Links</h2>
+	<p> link eg to Github, Google Docs, Trello board..</p>
+	<p> description of what link is used for eg project management is in Trello. Code is in Github </p>
+</div>
+
+<div class="container-tool">
+	<h2>Project Regulatory Issues</h2>
+	<p> Name of issue, description and notes, Name of Regulator, Response from regulator</p>
+</div>
+
+
+
 @section Scripts {
-    <script src="~/js/result.js" asp-append-version="true"></script>
+	<script src="~/js/result.js" asp-append-version="true"></script>
 }
 
 
