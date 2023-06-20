@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Serilog;
 
 namespace VLL.Web.Pages
 {
@@ -17,6 +18,12 @@ namespace VLL.Web.Pages
 
         public List<ProjectFullViewModel> Projects { get; set; } = null!;
 
+        public string PageTitle { get; set; } = null!;
+
+        // from the Microsoft.AspNetCore.Mvc namespace
+        [FromQuery(Name = "status")]
+        public string? Status { get; set; }
+
         //public int FaceSearchQueueLength { get; set; }
         //public int HateSpeechQueueLength { get; set; }
         //public int SpeechPartsQueueLength { get; set; }
@@ -30,12 +37,32 @@ namespace VLL.Web.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
+            Log.Information($"status is {Status}");
+
             //var loginId = Helper.GetLoginIdAsInt(HttpContext);
 
             var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 
-            //var jobs = await Db.GetJobsForLoginId(connectionString, loginId);
-            var projects = await Db.GetAllProjects(connectionString);
+            int? statusId = null;
+            if (Status == "challenge")
+            {
+                statusId = 1;
+                PageTitle = "Challenges";
+            }
+
+            if (Status == "ongoing")
+            {
+                statusId = 2;
+                PageTitle = "Ongoing Projects";
+            }
+
+            if (Status == "completed")
+            {
+                statusId = 3;
+                PageTitle = "Completed Projects";
+            }
+
+            var projects = await Db.GetAllProjects(connectionString, statusId);
             Projects = projects;
 
             //var projects = new List<ProjectFullViewModel>();

@@ -1045,20 +1045,32 @@ namespace VLL.Web
         }
 
         // used in /projects
-        public static async Task<List<ProjectFullViewModel>> GetAllProjects(string connectionString)
+        public static async Task<List<ProjectFullViewModel>> GetAllProjects(string connectionString, int? statusId = null)
         {
             using var conn = GetOpenConnection(connectionString);
+            IEnumerable<ProjectFullViewModel> result;
 
-            var result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(@"
+            if (statusId == 1 || statusId == 2 || statusId == 3)
+            {
+                result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(@"
                 select *
                 from Project 
-                -- **PUT IN FILTER
-                --where ProjectStatusId = 3
-                -- **FILTER**
+                where ProjectStatusId = @StatusId
+                and IsPublic = 1
+                order by DateTimeCreatedUtc desc
+                ", new { statusId });
+            }
+            else
+            {
+                // default to display all
+                result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(@"
+                select *
+                from Project 
                 where IsPublic = 1
                 order by DateTimeCreatedUtc desc
-                ");
+                ", new { statusId });
 
+            }
             return result.ToList();
         }
 
