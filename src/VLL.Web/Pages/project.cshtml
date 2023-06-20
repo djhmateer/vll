@@ -6,18 +6,23 @@
 }*@
 
 <div class="container-tool">
-	<h2>Project Details</h2>
-	<p>Project Logo / Images?</p>
+	<h2>@Model.ProjectFullViewModel.Name</h2>
+
+	@*<p>Project Logo / Images?</p>*@
 	@*<img src="https://davemateer.com/assets/2022-05-19/1.jpg" width="200" />*@
 	<img src="https://davemateer.com/assets/2021-10-22/email-cover.jpg" width="400" />
 
-	<p>projectId: @Model.ProjectFullViewModel.ProjectId</p>
-	<p>Name: @Model.ProjectFullViewModel.Name</p>
-	<p>ProjectStatusId: @Model.ProjectFullViewModel.ProjectStatusId</p>
-	<p>IsPublic: @Model.ProjectFullViewModel.IsPublic</p>
-	<p>PromoterLoginId: @Model.ProjectFullViewModel.PromoterLoginId</p>
+	@*<p>projectId: @Model.ProjectFullViewModel.ProjectId</p>*@
+
+	<p>Project Status: @Model.ProjectFullViewModel.ProjectStatusId</p>
+
+	<p>Is Public: @Model.ProjectFullViewModel.IsPublic</p>
+	<p>Promoter Email: @Model.ProjectFullViewModel.Email</p>
+
+	<p>Description: @Model.ProjectFullViewModel.ShortDescription</p>
 	<p>Description: @Model.ProjectFullViewModel.Description</p>
 	<p>Keywords: @Model.ProjectFullViewModel.Keywords</p>
+
 	<p>ResearchNotes: @Model.ProjectFullViewModel.ResearchNotes</p>
 	<p>DateTimeCreated: @Model.ProjectFullViewModel.DateTimeCreatedUtc.UtcToGmt()</p>
 </div>

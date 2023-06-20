@@ -154,7 +154,9 @@ namespace VLL.Web
      // not nullable in db, but useful for this concept of initiating
      int? ProjectId,
      string Name,
-     DateTime DateTimeCreatedUtc
+     DateTime DateTimeCreatedUtc,
+     string ShortDescription
+        
     );
 
     public record IssueViewModel(
@@ -170,10 +172,12 @@ namespace VLL.Web
  int ProjectStatusId,
  bool IsPublic,
  int PromoterLoginId,
+ string? ShortDescription,
  string? Description,
  string? Keywords,
  string? ResearchNotes,
- DateTime DateTimeCreatedUtc
+ DateTime DateTimeCreatedUtc,
+ string? Email
 );
 
 
@@ -991,7 +995,7 @@ namespace VLL.Web
             using var conn = GetOpenConnection(connectionString);
 
             var result = await conn.QueryAsyncWithRetry<ProjectViewModel>(@"
-                select ProjectId, Name, DateTimeCreatedUtc
+                select ProjectId, Name, DateTimeCreatedUtc, ShortDescription
                 from Project 
                 where ProjectStatusId = 1
                 and IsPublic = 1
@@ -1006,7 +1010,7 @@ namespace VLL.Web
             using var conn = GetOpenConnection(connectionString);
 
             var result = await conn.QueryAsyncWithRetry<ProjectViewModel>(@"
-                select ProjectId, Name, DateTimeCreatedUtc
+                select ProjectId, Name, DateTimeCreatedUtc, ShortDescription
                 from Project 
                 where ProjectStatusId = 2
                 and IsPublic = 1
@@ -1021,7 +1025,7 @@ namespace VLL.Web
             using var conn = GetOpenConnection(connectionString);
 
             var result = await conn.QueryAsyncWithRetry<ProjectViewModel>(@"
-                select ProjectId, Name, DateTimeCreatedUtc
+                select ProjectId, Name, DateTimeCreatedUtc, ShortDescription
                 from Project 
                 where ProjectStatusId = 3
                 and IsPublic = 1
@@ -1048,29 +1052,31 @@ namespace VLL.Web
         public static async Task<List<ProjectFullViewModel>> GetAllProjects(string connectionString, int? statusId = null)
         {
             using var conn = GetOpenConnection(connectionString);
-            IEnumerable<ProjectFullViewModel> result;
 
+            string sql = @"
+                select p.*, l.Email
+                from Project p
+                -- left join so if no promoterLoginId we still get result
+                left join login l on p.PromoterLoginId = l.LoginId
+            ";
             if (statusId == 1 || statusId == 2 || statusId == 3)
             {
-                result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(@"
-                select *
-                from Project 
-                where ProjectStatusId = @StatusId
-                and IsPublic = 1
-                order by DateTimeCreatedUtc desc
-                ", new { statusId });
+                sql += @"
+                where p.ProjectStatusId = @StatusId
+                and p.IsPublic = 1
+                order by p.DateTimeCreatedUtc desc
+                ";
             }
             else
             {
                 // default to display all
-                result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(@"
-                select *
-                from Project 
-                where IsPublic = 1
-                order by DateTimeCreatedUtc desc
-                ", new { statusId });
-
+                sql += @"
+                where p.IsPublic = 1
+                order by p.DateTimeCreatedUtc desc
+                ";
             }
+
+            var result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(sql, new { statusId });
             return result.ToList();
         }
 
@@ -1080,10 +1086,15 @@ namespace VLL.Web
             using var conn = GetOpenConnection(connectionString);
 
             var result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(@"
-                select *
-                from Project 
-                where ProjectId = @ProjectId
-                ", new { projectId });
+
+            select p.*, l.Email
+            from Project p
+            -- left join so if no promoterLoginId we still get result
+            left join login l on p.PromoterLoginId = l.LoginId
+
+            where p.ProjectId = @ProjectId
+
+            ", new { projectId });
 
             return result.SingleOrDefault();
         }

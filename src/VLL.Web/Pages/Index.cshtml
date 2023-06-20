@@ -32,7 +32,7 @@
 
 		@foreach (var p in Model.Challenges.Take(5))
 		{
-			<p class="text-sm"><a href="/project/@p.ProjectId">@p.Name</a></p>
+			<p class="text-sm"><a href="/project/@p.ProjectId">@p.Name</a> <br /> @p.ShortDescription</p>
 		}
 
 		<br />
@@ -49,7 +49,7 @@
 
 		@foreach (var p in Model.Ongoing.Take(5))
 		{
-			<p class="text-sm"><a href="/project/@p.ProjectId">@p.Name</a></p>
+			<p class="text-sm"><a href="/project/@p.ProjectId">@p.Name</a><br /> @p.ShortDescription</p>
 		}
 
 		<br />
@@ -71,7 +71,7 @@
 
 		@foreach (var p in Model.Completed.Take(5))
 		{
-			<p class="text-sm"><a href="/project/@p.ProjectId">@p.Name</a></p>
+			<p class="text-sm"><a href="/project/@p.ProjectId">@p.Name</a><br /> @p.ShortDescription</p>
 		}
 
 		<br />
