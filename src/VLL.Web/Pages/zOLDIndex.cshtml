@@ -1,0 +1,97 @@
+﻿@page
+@model zOLDIndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Arlawesi</h1>
+    <p>Specialised technology advice and development for the UK Legal Sector</p>
+    <p>Find and develop technology with a focus on regulatory issues </p>
+
+</div>
+
+
+
+<div class="text-left">
+    <h1 class="display-4">Challenges</h1>
+    <p>Most recent top 5 challenges in consideration. <a href="/projects?status=challenge">All Challenges</a></p>
+    <div class="container">
+        <div class="row">
+           @* <div class="col"> Name </div>*@
+        </div>
+
+        @foreach (var p in Model.Challenges.Take(5))
+        {
+            <div class="row">
+                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
+                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
+            </div>
+        }
+    </div>
+</div>
+
+<p></p>
+
+<div class="text-left">
+    <h1 class="display-4">Ongoing Projects</h1>
+    <p>Top 5 <a href="/projects?status=challenge">All Ongoing</a></p>
+    <div class="container">
+        <div class="row">
+          @*  <div class="col"> Name </div>*@
+        </div>
+
+        @foreach (var p in Model.Ongoing)
+        {
+            <div class="row">
+                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
+                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
+            </div>
+        }
+    </div>
+</div>
+
+<p></p>
+
+<div class="text-left">
+    <h1 class="display-4">Completed Projects</h1>
+    <p>Top 5 <a href="/projects?status=challenge">All Completed</a></p>
+    <div class="container">
+        <div class="row">
+            @*<div class="col"> Name </div>*@
+        </div>
+
+        @foreach (var p in Model.Completed)
+        {
+            <div class="row">
+                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
+                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
+            </div>
+        }
+    </div>
+</div>
+
+<p></p>
+
+<div class="text-left">
+    <h1 class="display-4">Regulatory Issue Map</h1>
+    <p>Top 5 <a href="/projects?status=challenge">All Issues</a></p>
+    <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"><i>Referred To</i></div>
+        </div>
+
+        @foreach (var p in Model.Issues)
+        {
+            <div class="row">
+                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
+                <div class="col"><a href="/issue/@p.IssueId">@p.Name</a> </div>
+                <div class="col">@p.Description</div>
+                <div class="col">Legal Services Board</div>
+            </div>
+        }
+    </div>
+</div>
+

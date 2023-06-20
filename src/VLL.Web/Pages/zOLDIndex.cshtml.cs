@@ -4,7 +4,7 @@ using Serilog;
 
 namespace VLL.Web.Pages
 {
-    public class IndexModel : PageModel
+    public class zOLDIndexModel : PageModel
     {
         public List<ProjectViewModel> Challenges { get; set; } = null!;
         public List<ProjectViewModel> Ongoing { get; set; } = null!;
@@ -12,12 +12,8 @@ namespace VLL.Web.Pages
 
         public List<IssueViewModel> Issues { get; set; } = null!;
 
-        public string? CacheBust { get; set; }
-
         public async Task OnGet()
         {
-            var base64Guid = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-            CacheBust = base64Guid;
 
             var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 

@@ -1,97 +1,137 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+	ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Arlawesi</h1>
-    <p>Specialised technology advice and development for the UK Legal Sector</p>
-    <p>Find and develop technology with a focus on regulatory issues </p>
 
-</div>
+<!-- Box A - Hero - Text Left col, Image and button right -->
+<section class="box box-a grid-col-2">
+	<div>
+		<div class="box-text">
+			<h2 class="text-xl">Specialised technology advice and development for the UK Legal Sector</h2>
+			<p class="text-sm">Find and develop technology with a focus on regulatory issues</p>
+
+			<p class="text-sm" id="foo"></p>
+
+		</div>
+	</div>
+	<div>
+		@*<img src="img/people/mont.jpg" alt="">*@
+		<img src="img/hero.png" alt="">
+	</div>
+</section>
 
 
+<!-- Box  -->
+<section class="box box-b grid-col-2 ">
+	<div class="box-text">
+		<h2 class="text-xl" id="aa">Challenges</h2>
 
-<div class="text-left">
-    <h1 class="display-4">Challenges</h1>
-    <p>Most recent top 5 challenges in consideration. <a href="/projects?status=challenge">All Challenges</a></p>
-    <div class="container">
-        <div class="row">
-           @* <div class="col"> Name </div>*@
-        </div>
+		<p class="text-sm"><b>Challenges</b> are proposed then turned into Projects</p>
 
-        @foreach (var p in Model.Challenges.Take(5))
-        {
-            <div class="row">
-                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
-                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
-            </div>
-        }
-    </div>
-</div>
+		@foreach (var p in Model.Challenges.Take(5))
+		{
+			<p class="text-sm"><a href="/project/@p.ProjectId">@p.Name</a></p>
+		}
 
-<p></p>
+		<br />
+		<div>
+			<a href="/projects?status=challenge" class="btn btn-light">All Challenges</a>
+		</div>
 
-<div class="text-left">
-    <h1 class="display-4">Ongoing Projects</h1>
-    <p>Top 5 <a href="/projects?status=challenge">All Ongoing</a></p>
-    <div class="container">
-        <div class="row">
-          @*  <div class="col"> Name </div>*@
-        </div>
+	</div>
 
-        @foreach (var p in Model.Ongoing)
-        {
-            <div class="row">
-                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
-                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
-            </div>
-        }
-    </div>
-</div>
+	<div class="box-text">
+		<h2 class="text-xl" id="aa">Ongoing Projects</h2>
 
-<p></p>
+		<p class="text-sm"><b>Ongoing Projects</b> are in current development</p>
 
-<div class="text-left">
-    <h1 class="display-4">Completed Projects</h1>
-    <p>Top 5 <a href="/projects?status=challenge">All Completed</a></p>
-    <div class="container">
-        <div class="row">
-            @*<div class="col"> Name </div>*@
-        </div>
+		@foreach (var p in Model.Ongoing.Take(5))
+		{
+			<p class="text-sm"><a href="/project/@p.ProjectId">@p.Name</a></p>
+		}
 
-        @foreach (var p in Model.Completed)
-        {
-            <div class="row">
-                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
-                <div class="col"><a href="/project/@p.ProjectId">@p.Name</a> </div>
-            </div>
-        }
-    </div>
-</div>
+		<br />
+		<div>
+			<a href="/projects?status=ongoing" class="btn btn-light">All Ongoing</a>
+		</div>
 
-<p></p>
+	</div>
 
-<div class="text-left">
-    <h1 class="display-4">Regulatory Issue Map</h1>
-    <p>Top 5 <a href="/projects?status=challenge">All Issues</a></p>
-    <div class="container">
-        <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"><i>Referred To</i></div>
-        </div>
+</section>
 
-        @foreach (var p in Model.Issues)
-        {
-            <div class="row">
-                @*<div class="col"> @p.DateTimeCreatedUtc.UtcToGmt() </div>*@
-                <div class="col"><a href="/issue/@p.IssueId">@p.Name</a> </div>
-                <div class="col">@p.Description</div>
-                <div class="col">Legal Services Board</div>
-            </div>
-        }
-    </div>
-</div>
+
+<!-- Box  2-->
+<section class="box box-b grid-col-2 ">
+	<div class="box-text">
+		<h2 class="text-xl" id="aa">Completed Projects</h2>
+
+		<p class="text-sm"><b>Completed Projects</b> are </p>
+
+		@foreach (var p in Model.Completed.Take(5))
+		{
+			<p class="text-sm"><a href="/project/@p.ProjectId">@p.Name</a></p>
+		}
+
+		<br />
+		<div>
+			<a href="/projects?status=completed" class="btn btn-light">All Completed</a>
+		</div>
+
+	</div>
+
+	<div class="box-text">
+		<h2 class="text-xl" id="aa">Regulatory Issues</h2>
+
+		<p class="text-sm"><b>Regulatory Issues</b> are </p>
+
+		@foreach (var p in Model.Issues.Take(5))
+		{
+			<p class="text-sm"><a href="/issues/@p.IssueId">@p.Name</a> @*@p.Description.Ellipsis(80)*@</p>
+		}
+
+		<br />
+		<div>
+			<a href="/projects?status=ongoing" class="btn btn-light">All Issues</a>
+		</div>
+
+	</div>
+
+</section>
+
+
+<!-- News -->
+<section class="box bg-grey text-center py-md">
+	<div class="box-inner">
+		<h2 class="text-md">Launch of Arlawesi</h2>
+		<p class="text-sm">Arlawesi means ....</p>
+		<p class="text-sm">We are excited to launch ... </p>
+
+		<a href="/about">About Us</a>
+	</div>
+</section>
+
+<!-- Thank you to-->
+<section class="box box-thank-you text-center py-md">
+	<div class="box-inner">
+		<h2 class="text-md">Thank You</h2>
+		<p class="text-sm">To our collaborators, sponsors and technology providers</p>
+		<!-- <ul>
+			<li>ESRC</li>
+		</ul> -->
+	</div>
+</section>
+<!-- thank you logos -->
+<!-- box gives 1440 max width -->
+<section class="box box-thank-you-logos">
+	<ul>
+		@*<li><a href="https://esrc.ukri.org/"><img src="img/esrc-logo.jpg" alt="Economic and Social Research Council" title="Economic and Social Research Council"></a></li>*@
+		<li><a href="https://www.swansea.ac.uk/law/"><img src="img/swansea-university-logo.svg" alt="Sweansea University" title="Swansea University"></a></li>
+		<li><a href="https://hmsoftware.co.uk/"><img src="img/hms-logo2.png" alt="HMSoftware" title="HMSoftware"></a></li>
+		<!-- <li><img src="img/esrc-logo.jpg" alt=""></li> -->
+	</ul>
+	<!-- https://cs.swansea.ac.uk/~cssimonr/resources/ -->
+	<!-- https://www.hw.ac.uk/uk/services/media-services/brand-guidelines.htm -->
+</section>
 

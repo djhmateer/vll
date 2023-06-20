@@ -7,77 +7,198 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Arlawesi</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/VLL.Web.styles.css" asp-append-version="true" />
+    <!-- next 3 were standard template bootstrap-->
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    @*<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
+    @*<link rel="stylesheet" href="~/VLL.Web.styles.css" asp-append-version="true" />*@
+
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Arlawesi</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
 
-
-                        @if (HttpContextAccessor.HttpContext!.User.Identity!.IsAuthenticated)
-                        {
-                            <li class="nav-item"><a class="nav-link text-dark" href="/account/manage">@User?.Identity?.Name</a></li>
-                            <li class="nav-item">
-                                <form class="form-inline" asp-page="/account/logout" method="post">
-                                    <button type="submit" class="btn btn-light">Logout</button>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item"><a class="nav-link text-dark" href="/account/login">Login</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" href="/account/register">Register</a></li>
-                        }
-
-                        @{
-                            bool isAdmin = false;
-                            var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-                            if (roles.Contains("Admin")) isAdmin = true;
-                        }
-
-                        @if (isAdmin)
-                        {
-                            <li class="nav-item"><a class="nav-link text-dark" href="/admin/index">Admin</a></li>
-                        }
-
-
-
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - Arlawesi - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    <nav class="navbar">
+        <!-- Logo -->
+        <div class="navbar-logo">
+            <a href="/">
+                @*<img src="/img/osr-logo.png" alt="OSR4RightsTools">*@
+                <img src="/img/a2-logo.png" alt="Arlawesi">
+            </a>
         </div>
+
+        <!-- Navbar Left -->
+        <ul class="navbar-nav-left">
+            <li class="underline"><a href="/projects?status=challenge">Challenges</a></li>
+            <li class="underline"><a href="/projects?status=ongoing">Ongoing</a></li>
+            <li class="underline"><a href="/projects?status=completed">Completed</a></li>
+            <li class="underline"><a href="/issues">Issues</a></li>
+            <li class="underline"><a href="/about">About</a></li>
+            <li class="underline"><a href="/contact">Contact Us</a></li>
+            @*<li class="underline"><a href="/face-search">Privacy</a></li>*@
+            @*<li class="underline"><a href="/speech-parts">SpeechParts</a></li>*@
+            @*<li class="underline"><a href="/auto-archiver">AutoArchiver</a></li>*@
+            @*<li class="underline"><a href="/fire-map">FireMap</a></li>*@
+            @if (HttpContextAccessor.HttpContext!.User.Identity!.IsAuthenticated)
+            {
+                @*<li class="underline"><a href="/results">Projects</a></li>*@
+            }
+
+            @{
+                bool isAdmin = false;
+                var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+                if (roles.Contains("Admin")) isAdmin = true;
+            }
+
+            @if (isAdmin)
+            {
+                <li class="underline"><a href="/admin/index">Admin</a></li>
+                //<li class="underline"><a href="/admin/dashboard">Dash</a></li>
+            }
+            else
+            {
+                //<li class="underline"><a href="https://osr4rights.org">About</a></li>
+            }
+
+        </ul>
+
+        <!--  Navbar Right-->
+        <ul class="navbar-nav-right">
+            @*<li class="underline"><a href="#">Contact</a></li>*@
+            @if (HttpContextAccessor.HttpContext!.User.Identity!.IsAuthenticated)
+            {
+                //<li class="underline"><a href="/account/manage">Hello @User?.Identity?.Name!</a></li>
+                <li class="underline"><a href="/account/manage">@User?.Identity?.Name</a></li>
+                <li class="underline">
+                    <form class="form-inline" asp-page="/account/logout" method="post">
+                        <button type="submit" class="btn btn-light">Logout</button>
+                    </form>
+                </li>
+            }
+            else
+            {
+                @*<li class="underline login-link"><a href="/account/login">Login</a></li>*@
+                <li class="underline"><a href="/account/login">Login</a></li>
+                <li><a href="/account/register" class="btn btn-blue">Register</a></li>
+            }
+        </ul>
+
+        <!-- Hamburger Menu -->
+        <button type="button" class="hamburger" id="menu-btn">
+            <span class="hamburger-top"></span>
+            <span class="hamburger-middle"></span>
+            <span class="hamburger-bottom"></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden" id="mobile-menu">
+        <ul>
+            <li><a href="/projects?status=challenge">Challenges</a></li>
+            <li><a href="/projects?status=ongoing">Ongoing Projects</a></li>
+            <li><a href="/projects?status=completed">Completed Projects</a></li>
+            <li><a href="/issues">Issues</a></li>
+            <!--<li><a href="/auto-archiver">AutoArchiver</a></li>
+            <li><a href="/fire-map">FireMap</a></li>-->
+        </ul>
+
+        <div class="mobile-menu-bottom">
+            <div>
+                <a href="/about">About</a>
+                <!--<a href="#">
+                    <img src="/img/marker.svg" alt="">
+                    <span>About</span>
+                </a>-->
+            </div>
+
+            <div>
+                <ul>
+                    @if (HttpContextAccessor.HttpContext!.User.Identity!.IsAuthenticated)
+                    {
+                        <li><a href="/account/manage">Hello @User?.Identity?.Name!</a></li>
+                        <li>
+                            <form class="form-inline" asp-page="/account/logout" method="post">
+                                <button type="submit" class="btn btn-light">Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="underline login-link"><a href="/account/login">Login</a></li>
+                        <li><a href="/account/register" class="btn btn-blue">Register</a></li>
+                    }
+                </ul>
+            </div>
+
+
+            @*<button class="btn btn-dark-outline">Login</button>
+            <button class="btn btn-blue">Try for free</button>
+            *@            <!-- put in div so it goes down a line -->
+        </div>
+    </div>
+    <!-- end mobile menu-->
+    @RenderBody()
+
+    <!-- Links -->
+    <section class="links bg-grey">
+        <div class="links-inner">
+            <ul>
+                <li>
+                    <h3>OSR4RightsTools</h3>
+                </li>
+                <li><a href="/privacy">Data Protection and Privacy</a></li>
+                <li><a href="#">Terms of Use (coming soon)</a></li>
+                <!--<li><a href="#">Privacy</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">News</a></li>
+                <li><a href="#">Conferences</a></li>
+                <li><a href="#">Sustainability</a></li>-->
+            </ul>
+            <ul>
+                <li>
+                    <h3>Tools</h3>
+                </li>
+                <li><a href="/hate-speech">Hate Speech</a></li>
+                <li><a href="/face-search">Face Search</a></li>
+                <li><a href="/speech-parts">Speech Parts</a></li>
+                <li><a href="/auto-archiver">Auto Archiver</a></li>
+                <li><a href="/fire-map">Fire Map</a></li>
+                <li><a href="https://osr4rights.org/technical-tools/">Face Search (Offline Docker)</a></li>
+            </ul>
+            <ul>
+                <li>
+                    <h3>Resources</h3>
+                </li>
+                <li><a href="#">Case Studies (coming soon)</a></li>
+                <li><a href="https://osr4rights.org/guide-to-osr/">Human Rights Guide</a></li>
+                <li><a href="https://osr4rights.org">Background to the Project</a></li>
+                <li><a href="#">Conferences (coming soon)</a></li>
+                <li><a href="#">News (coming soon)</a></li>
+            </ul>
+            <ul>
+                <li>
+                    <h3>Get Support</h3>
+                </li>
+                <li><a href="https://osr4rights.org/">About Us</a></li>
+                <li><a href="https://www.youtube.com/watch?v=5JUdVXVq4wk">Video Introduction</a></li>
+                <li><a href="/faq">FAQ</a></li>
+                <li><a href="https://osr4rights.org/contact-us/">Contact Us</a></li>
+            </ul>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer bg-grey">
+        <ul>
+            <li> &copy; 2023 - Arlawesi </li>
+        </ul>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- hamburger menu -->
+    <script src="~/js/script.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

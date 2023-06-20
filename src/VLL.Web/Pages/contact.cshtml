@@ -1,0 +1,54 @@
+﻿@page
+@model ContactModel
+@{
+    ViewData["Title"] = "Contact";
+}
+@*<h1>@ViewData["Title"]</h1>*@
+
+<!-- Contact Us -->
+<!-- Box B2 - Auto-archive -->
+<section class="box box-b grid-col-2" id="contact-us">
+    @*<section class="box box-b" id="contact-us">*@
+    <!-- <img src="img/box-b.png" alt=""> -->
+    <div class="box-text">
+        <h2 class="text-xl">Contact Us </h2>
+
+        @*<p class="text-sm">We would love to hear from you!</p>*@
+
+        <p class="text-sm">Send us a direct email at: <a href="mailto:dave.mateer@auto-archiver.com">x@arlawesi.org.uk</a> or call us on +44 1111 1111</p>
+
+        <form method="post">
+
+            <div>
+                <!-- <label for="hateSpeech">Enter hatespeech:</label> -->
+            </div>
+            <input class="input text-sm" type="text" id="email" placeholder="eg alice@example.com" value="" name="email">
+
+            <textarea class="input" name="message" rows="5" placeholder="message"></textarea>
+
+            <input type="hidden" name="route" value="auto" />
+
+
+            <input type="hidden" name="cb" value="@Model.CacheBust" />
+
+            <div class="py-md">
+                <!-- submit the form -->
+                @*<button type="submit" class="btn btn-blue" disabled>Analyse URL (coming soon)</button>*@
+                <button type="submit" class="btn btn-blue">Send</button>
+            </div>
+
+        </form>
+        @*    <div>
+        <a href="/auto-archiver" class="btn btn-light">More Info</a>
+        </div>*@
+
+    </div>
+
+    <!-- Try for Free-->
+@*    <div class="box-text" id="try-for-free">
+        <h2 class="text-xl">Try for Free</h2>
+        <p class="text-sm">Please contact me (details to the left) and we can get you setup quickly <b>15 mins</b> on one of our demo sheets. </p>
+
+        <p class="text-sm">You will be able to archive as many links as you want, and will have access to support.</p>
+    </div>*@
+</section>
