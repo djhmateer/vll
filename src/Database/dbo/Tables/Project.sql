@@ -4,6 +4,7 @@
     [ProjectStatusId]    INT            NOT NULL,
     [IsPublic]           BIT            NOT NULL,
     [PromoterLoginId]    INT            NULL,
+    [ShortDescription]   NVARCHAR (255) NULL,
     [Description]        NVARCHAR (MAX) NULL,
     [Keywords]           NVARCHAR (MAX) NULL,
     [ResearchNotes]      NVARCHAR (MAX) NULL,
@@ -11,6 +12,8 @@
     CONSTRAINT [PK_Project] PRIMARY KEY CLUSTERED ([ProjectId] ASC),
     CONSTRAINT [FK_Project_ProjectStatus] FOREIGN KEY ([ProjectStatusId]) REFERENCES [dbo].[ProjectStatus] ([ProjectStatusId])
 );
+
+
 
 
 

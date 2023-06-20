@@ -166,6 +166,7 @@ namespace VLL.Web
     string Description
     );
 
+    // used by /projects
     public record ProjectFullViewModel(
  int? ProjectId,
  string Name,
@@ -177,8 +178,38 @@ namespace VLL.Web
  string? Keywords,
  string? ResearchNotes,
  DateTime DateTimeCreatedUtc,
- string? Email
+ string? PromoterEmail
 );
+
+    // used by /project/4
+    public record ProjectAllTablesViewModel(
+ int? ProjectId,
+ string Name,
+ int ProjectStatusId,
+ bool IsPublic,
+ int PromoterLoginId,
+ string? ShortDescription,
+ string? Description,
+ string? Keywords,
+ string? ResearchNotes,
+ DateTime DateTimeCreatedUtc,
+ string? PromoterEmail,
+ string? ProjectStatusName
+);
+
+	// used by /project/4
+	public record ProjectMembersViewModel(
+ int? LoginId,
+ string Email
+);
+
+    // used by /project/4
+    public record ProjectLinksViewModel(
+ int? LinkId,
+ string Url,
+ string? Description
+);
+
 
 
     public static class LoginStateId
@@ -1054,7 +1085,7 @@ namespace VLL.Web
             using var conn = GetOpenConnection(connectionString);
 
             string sql = @"
-                select p.*, l.Email
+                select p.*, l.Email as PromoterEmail
                 from Project p
                 -- left join so if no promoterLoginId we still get result
                 left join login l on p.PromoterLoginId = l.LoginId
@@ -1081,14 +1112,15 @@ namespace VLL.Web
         }
 
         // /project/2
-        public static async Task<ProjectFullViewModel> GetProjectByProjectId(string connectionString, int projectId)
+        public static async Task<ProjectAllTablesViewModel> GetProjectByProjectId(string connectionString, int projectId)
         {
             using var conn = GetOpenConnection(connectionString);
 
-            var result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(@"
+            var result = await conn.QueryAsyncWithRetry<ProjectAllTablesViewModel>(@"
 
-            select p.*, l.Email
+            select p.*, l.Email as PromoterEmail, ps.Name as ProjectStatusName
             from Project p
+            join ProjectStatus ps on p.ProjectStatusId = ps.ProjectStatusId
             -- left join so if no promoterLoginId we still get result
             left join login l on p.PromoterLoginId = l.LoginId
 
@@ -1097,6 +1129,37 @@ namespace VLL.Web
             ", new { projectId });
 
             return result.SingleOrDefault();
+        }
+
+        // /project/2
+        public static async Task<List<ProjectMembersViewModel>> GetProjectMembersByProjectId(string connectionString, int projectId)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<ProjectMembersViewModel>(@"
+
+            select l.LoginId, l.Email
+            from Login l
+            join ProjectLogin pl on l.LoginId = pl.LoginId
+            where pl.ProjectId = @ProjectId
+
+            ", new { projectId });
+
+            return result.ToList();
+        }
+
+        public static async Task<List<ProjectLinksViewModel>> GetLinksByProjectId(string connectionString, int projectId)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<ProjectLinksViewModel>(@"
+
+            select l.LinkId, l.Url, l.Description
+            from Link l
+            where l.ProjectId = @ProjectId
+            ", new { projectId });
+
+            return result.ToList();
         }
 
         //**HRE put in Peroject

@@ -13,7 +13,11 @@ namespace VLL.Web.Pages
     public class ProjectModel : PageModel
     {
         //public JobViewModel Job { get; set; } = null!;
-        public ProjectFullViewModel ProjectFullViewModel { get; set; } = null!;
+        public ProjectAllTablesViewModel ProjectAllTablesViewModel { get; set; } = null!;
+
+        public List<ProjectMembersViewModel> ListOfProjectMembersViewModel { get; set; } = null!;
+
+        public List<ProjectLinksViewModel> ListOfProjectLinksViewModel { get; set; } = null!;
         //public TimeSpan TotalTime { get; set; }
         //public int QueueLength { get; set; }
 
@@ -39,7 +43,11 @@ namespace VLL.Web.Pages
 
             //if (!isAllowed) return LocalRedirect("/account/access-denied");
 
-            ProjectFullViewModel = await Db.GetProjectByProjectId(connectionString, projectId);
+            ProjectAllTablesViewModel = await Db.GetProjectByProjectId(connectionString, projectId);
+
+            ListOfProjectMembersViewModel = await Db.GetProjectMembersByProjectId(connectionString, projectId);
+            
+            ListOfProjectLinksViewModel = await Db.GetLinksByProjectId(connectionString, projectId);
 
             //string? jobStatusString = job.JobStatusId switch
             //{
