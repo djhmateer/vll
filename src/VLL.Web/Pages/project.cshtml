@@ -14,25 +14,24 @@
 
 	@*<p>projectId: @Model.ProjectFullViewModel.ProjectId</p>*@
 
-	<p>Project Status: @Model.ProjectAllTablesViewModel.ProjectStatusName</p>
+@*	<p>Project Status: @Model.ProjectAllTablesViewModel.ProjectStatusName</p>*@
 
 	<p>Date Created: @Model.ProjectAllTablesViewModel.DateTimeCreatedUtc.UtcToGmt().ToString("dd/MM/yyyy")</p>
 
 @*	<p>Is Public: @Model.ProjectFullViewModel.IsPublic</p>*@
-	<p>Promoter Email: <a href="">@Model.ProjectAllTablesViewModel.PromoterEmail</a></p>
+	<p>Promoter: <a href="">@Model.ProjectAllTablesViewModel.PromoterEmail</a></p>
 
 	<p>Short Description: @Model.ProjectAllTablesViewModel.ShortDescription</p>
 
+	<p>Keywords: @Model.ProjectAllTablesViewModel.Keywords</p>
     <br />
 
 	@*<p>Description: @Model.ProjectAllTablesViewModel.Description</p>*@
 	<p>Description: @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.ProjectAllTablesViewModel.Description))</p>
 
     <br />
-	<p>Keywords: @Model.ProjectAllTablesViewModel.Keywords</p>
-    <br />
 
-	<p>Research Notes: @Model.ProjectAllTablesViewModel.ResearchNotes</p>
+	<p>Notes: @Model.ProjectAllTablesViewModel.ResearchNotes</p>
 </div>
 
 <div class="container-tool">

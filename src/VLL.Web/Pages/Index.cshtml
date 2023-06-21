@@ -88,7 +88,7 @@
 
 		@foreach (var p in Model.Issues.Take(5))
 		{
-			<p class="text-sm"><a href="/issues/@p.IssueId">@p.Name</a> @*@p.Description.Ellipsis(80)*@</p>
+			<p class="text-sm"><a href="/issue/@p.IssueId">@p.Name</a> @*@p.Description.Ellipsis(80)*@</p>
 		}
 
 		<br />

@@ -19,28 +19,16 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col"></th>
                 <th scope="col">Name</th>
-                <th scope="col">ProjectStatusId</th>
-                <th scope="col">PromoterLoginId</th>
                 <th scope="col">Description</th>
-                <th scope="col">Keywords</th>
-                <th scope="col">Research Notes</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var p in Model.Projects)
+            @foreach (var p in Model.Issues)
             {
                 <tr>
-                    <td><a href="/project/@p.ProjectId">Details</a></td>
-                    <td>@p.Name</td>
-                    <td>@p.ProjectStatusId</td>
-                    <td>@p.PromoterLoginId</td>
+                    <td><a href="/issue/@p.IssueId">@p.Name</a></td>
                     <td>@p.Description</td>
-                    <td>@p.Keywords</td>
-                    <td>@p.ResearchNotes</td>
-                    @*<td>@p.DateTimeCreatedUtc.ToString("dd/MM/yyyy HH:mm:ss")</td>*@
-                    <td>@p.DateTimeCreatedUtc.ToString("dd/MM/yyyy")</td>
                 </tr>
             }
         </tbody>

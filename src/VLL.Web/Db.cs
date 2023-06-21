@@ -217,6 +217,17 @@ namespace VLL.Web
  string? Description
 );
 
+    // used by /issue/2
+    public record IssueAllTablesViewModel(
+int? IssueId,
+int ProjectId,
+int? RegulatorId,
+string Name,
+string? Description,
+string? Keywords,
+string? Response,
+DateTime DateTimeCreatedUtc
+);
 
 
     public static class LoginStateId
@@ -1181,6 +1192,27 @@ namespace VLL.Web
             ", new { projectId });
 
             return result.ToList();
+        }
+
+
+        // /project/2
+        public static async Task<IssueAllTablesViewModel> GetIssueByIssueId(string connectionString, int issueId)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<IssueAllTablesViewModel>(@"
+
+            select *
+            from Issue i
+            -- join ProjectStatus ps on p.ProjectStatusId = ps.ProjectStatusId
+            -- left join so if no promoterLoginId we still get result
+            --left join login l on p.PromoterLoginId = l.LoginId
+
+            where i.IssueId = @IssueId 
+
+            ", new { issueId });
+
+            return result.SingleOrDefault();
         }
 
         //**HRE put in Peroject

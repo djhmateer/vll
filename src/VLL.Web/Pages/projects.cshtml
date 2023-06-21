@@ -22,11 +22,11 @@
                 @*<th scope="col"></th>*@
                 <th scope="col">Name</th>
               @*  <th scope="col">ProjectStatusId</th>*@
-                <th scope="col">Promoter</th>
+                @*<th scope="col">Promoter</th>*@
                 <th scope="col">Short Description</th>
-                <th scope="col">Keywords</th>
+                @*<th scope="col">Keywords</th>*@
                 @*<th scope="col">Research Notes</th>*@
-                <th scope="col">Date</th>
+                @*<th scope="col">Date</th>*@
             </tr>
         </thead>
         <tbody>
@@ -36,13 +36,13 @@
                     <td><a href="/project/@p.ProjectId">@p.Name</a></td>
                     @*<td>@p.Name</td>*@
                     @*<td>@p.ProjectStatusId</td>*@
-                    <td>@p.PromoterEmail</td>
+                    @*<td>@p.PromoterEmail</td>*@
                     <td>@p.ShortDescription</td>
                     @*<td>@p.Description</td>*@
-                    <td>@p.Keywords</td>
+                    @*<td>@p.Keywords</td>*@
                     @*<td>@p.ResearchNotes</td>*@
                     @*<td>@p.DateTimeCreatedUtc.ToString("dd/MM/yyyy HH:mm:ss")</td>*@
-                    <td>@p.DateTimeCreatedUtc.UtcToGmt().ToString("dd/MM/yyyy")</td>
+                    @*<td>@p.DateTimeCreatedUtc.UtcToGmt().ToString("dd/MM/yyyy")</td>*@
                 </tr>
             }
         </tbody>

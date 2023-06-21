@@ -1,0 +1,68 @@
+﻿@page "{issueId:int}"
+@model VLL.Web.Pages.IssueModel
+
+@*@section Styles {
+    <link href="/css/style-login.css" rel="stylesheet" type="text/css" />
+}*@
+
+<div class="container-tool">
+	<h2>@Model.IssueAllTablesViewModel.Name</h2>
+
+	@*<p>Project Logo / Images?</p>*@
+	@*<img src="https://davemateer.com/assets/2022-05-19/1.jpg" width="200" />*@
+	@*<img src="https://davemateer.com/assets/2021-10-22/email-cover.jpg" width="400" />*@
+
+	@*<p>projectId: @Model.ProjectFullViewModel.ProjectId</p>*@
+
+@*	<p>Project Status: @Model.ProjectAllTablesViewModel.ProjectStatusName</p>*@
+
+	<p>Date Created: @Model.IssueAllTablesViewModel.DateTimeCreatedUtc.UtcToGmt().ToString("dd/MM/yyyy")</p>
+
+@*	<p>Is Public: @Model.ProjectFullViewModel.IsPublic</p>*@
+	@*<p>Promoter: <a href="">@Model.ProjectAllTablesViewModel.PromoterEmail</a></p>*@
+
+	@*<p>Short Description: @Model.ProjectAllTablesViewModel.ShortDescription</p>*@
+
+	<p>Keywords: @Model.IssueAllTablesViewModel.Keywords</p>
+    <br />
+
+	@*<p>Description: @Model.ProjectAllTablesViewModel.Description</p>*@
+	<p>Description: @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.IssueAllTablesViewModel.Description))</p>
+
+    <br />
+
+	@*<p>Notes: @Model.ProjectAllTablesViewModel.ResearchNotes</p>*@
+</div>
+@*
+<div class="container-tool">
+	<h2>Project Members</h2>
+	<p>Lorem ipsum</p>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Institution</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.ListOfProjectMembersViewModel)
+            {
+                <tr>
+                    <td><a href="/project/">@p.Email</a></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>*@
+
+
+@section Scripts {
+	<script src="~/js/result.js" asp-append-version="true"></script>
+}
+
+

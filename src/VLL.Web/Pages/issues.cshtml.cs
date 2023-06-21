@@ -15,7 +15,8 @@ namespace VLL.Web.Pages
 
         //public int JobId { get; set; }
 
-        public List<ProjectFullViewModel> Projects { get; set; } = null!;
+        //public List<ProjectFullViewModel> Projects { get; set; } = null!;
+        public List<IssueViewModel> Issues { get; set; } = null!;
 
         //public int FaceSearchQueueLength { get; set; }
         //public int HateSpeechQueueLength { get; set; }
@@ -35,8 +36,7 @@ namespace VLL.Web.Pages
             var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 
             //var jobs = await Db.GetJobsForLoginId(connectionString, loginId);
-            var projects = await Db.GetAllProjects(connectionString);
-            Projects = projects;
+            Issues = await Db.GetAllIssues(connectionString);
 
             //var projects = new List<ProjectFullViewModel>();
             //foreach (var p in projects)
