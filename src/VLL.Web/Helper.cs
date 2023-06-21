@@ -186,19 +186,22 @@ namespace VLL.Web
 	public static class Helper
 	{
 
-		public static int GetLoginIdAsInt(HttpContext httpContext)
+		public static int? GetLoginIdAsInt(HttpContext httpContext)
 		{
 			var loginIdString = httpContext.User.Claims.FirstOrDefault(x => x.Type == "LoginId")?.Value;
 
 			var result = int.TryParse(loginIdString, out int loginId);
 
-			if (result == false)
-				throw new ApplicationException("Can't get loginId");
+			int? foo = null;
 
-			if (loginId == 0)
-				throw new ApplicationException("LoginId is 0");
+			if (result != false) foo = loginId;
+			//if (result == false)
+			//	throw new ApplicationException("Can't get loginId");
 
-			return loginId;
+			//if (loginId == 0)
+			//	throw new ApplicationException("LoginId is 0");
+
+			return foo;
 		}
 	}
 

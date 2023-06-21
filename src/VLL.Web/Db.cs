@@ -156,7 +156,7 @@ namespace VLL.Web
      string Name,
      DateTime DateTimeCreatedUtc,
      string ShortDescription
-        
+
     );
 
     public record IssueViewModel(
@@ -197,8 +197,8 @@ namespace VLL.Web
  string? ProjectStatusName
 );
 
-	// used by /project/4
-	public record ProjectMembersViewModel(
+    // used by /project/4
+    public record ProjectMembersViewModel(
  int? LoginId,
  string Email
 );
@@ -226,7 +226,9 @@ string Name,
 string? Description,
 string? Keywords,
 string? Response,
-DateTime DateTimeCreatedUtc
+DateTime DateTimeCreatedUtc,
+string? ProjectName,
+string? RegulatorName
 );
 
 
@@ -1202,17 +1204,33 @@ DateTime DateTimeCreatedUtc
 
             var result = await conn.QueryAsyncWithRetry<IssueAllTablesViewModel>(@"
 
-            select *
+            select i.*, p.Name as ProjectName, r.Name as RegulatorName
             from Issue i
-            -- join ProjectStatus ps on p.ProjectStatusId = ps.ProjectStatusId
-            -- left join so if no promoterLoginId we still get result
-            --left join login l on p.PromoterLoginId = l.LoginId
-
+            join Project p on p.ProjectId = i.ProjectId 
+            left join Regulator r on i.RegulatorId = r.RegulatorId
             where i.IssueId = @IssueId 
 
             ", new { issueId });
 
             return result.SingleOrDefault();
+        }
+
+        // used by /project/2 to see if should display edit button
+        public static async Task<bool> CheckIfLoginIdCanSeeEditButtonForProjectId(string connectionString, int loginId, int projectId)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<bool>(@"
+            select count(*) 
+            from Project 
+            where PromoterLoginId = @PromoterLoginId 
+            and ProjectId = @ProjectId
+            ", new { promoterLoginId = loginId, projectId });
+
+            // https://stackoverflow.com/a/31282196/26086
+            // When  0 is returned Dapper will return False
+            return result.FirstOrDefault();
+
         }
 
         //**HRE put in Peroject

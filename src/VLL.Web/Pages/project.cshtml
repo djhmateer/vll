@@ -12,99 +12,106 @@
 	@*<img src="https://davemateer.com/assets/2022-05-19/1.jpg" width="200" />*@
 	<img src="https://davemateer.com/assets/2021-10-22/email-cover.jpg" width="400" />
 
+	@if (Model.CanSeeEditButton)
+	{
+		<p><a href="/project/edit/@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Edit</a></p>
+	}
+
 	@*<p>projectId: @Model.ProjectFullViewModel.ProjectId</p>*@
 
-@*	<p>Project Status: @Model.ProjectAllTablesViewModel.ProjectStatusName</p>*@
+	@*	<p>Project Status: @Model.ProjectAllTablesViewModel.ProjectStatusName</p>*@
 
 	<p>Date Created: @Model.ProjectAllTablesViewModel.DateTimeCreatedUtc.UtcToGmt().ToString("dd/MM/yyyy")</p>
 
-@*	<p>Is Public: @Model.ProjectFullViewModel.IsPublic</p>*@
+	@*	<p>Is Public: @Model.ProjectFullViewModel.IsPublic</p>*@
 	<p>Promoter: <a href="">@Model.ProjectAllTablesViewModel.PromoterEmail</a></p>
 
 	<p>Short Description: @Model.ProjectAllTablesViewModel.ShortDescription</p>
 
 	<p>Keywords: @Model.ProjectAllTablesViewModel.Keywords</p>
-    <br />
+	<br />
 
 	@*<p>Description: @Model.ProjectAllTablesViewModel.Description</p>*@
-	<p>Description: @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.ProjectAllTablesViewModel.Description))</p>
+	<p>Description:</p>
+	<p>@Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.ProjectAllTablesViewModel.Description))</p>
 
-    <br />
+	<br />
 
-	<p>Notes: @Model.ProjectAllTablesViewModel.ResearchNotes</p>
+	<p>Notes:</p>
+	<p>@Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.ProjectAllTablesViewModel.ResearchNotes))</p>
 </div>
 
 <div class="container-tool">
 	<h2>Project Members</h2>
 	<p>Lorem ipsum</p>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Email</th>
-                <th scope="col">Name</th>
-                <th scope="col">Phone</th>
-                <th scope="col">Institution</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in Model.ListOfProjectMembersViewModel)
-            {
-                <tr>
-                    <td><a href="/project/">@p.Email</a></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">Email</th>
+				@* <th scope="col">Name</th>
+				<th scope="col">Phone</th>
+				<th scope="col">Institution</th>*@
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var p in Model.ListOfProjectMembersViewModel)
+			{
+				<tr>
+					<td><a href="/project/">@p.Email</a></td>
+					@*<td></td>
+				<td></td>
+				<td></td>*@
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>
 
 <div class="container-tool">
 	<h2>Project Links</h2>
-    <p>Lorem ipsum</p>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Link</th>
-                <th scope="col">Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in Model.ListOfProjectLinksViewModel)
-            {
-                <tr>
-                    <td><a href="@p.Url">@p.Url</a></td>
-                    <td>@p.Description</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<p>Lorem ipsum</p>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">Link</th>
+				<th scope="col">Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var p in Model.ListOfProjectLinksViewModel)
+			{
+				<tr>
+					<td><a href="@p.Url">@p.Url</a></td>
+					<td>@p.Description</td>
+					<td></td>
+					<td></td>
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>
 
 <div class="container-tool">
-    <h2>Project Regulatory Issues</h2>
-    <p>Lorem ipsum</p>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                @*<th scope="col">Keywords</th>*@
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in Model.ListOfProjectIssuesViewModel)
-            {
-                <tr>
-                    <td><a href="/issue/@p.IssueId">@p.Name</a></td>
-                    <td>@p.Description</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<h2>Project Regulatory Issues</h2>
+	<p>Lorem ipsum</p>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">Name</th>
+				<th scope="col">Description</th>
+				@*<th scope="col">Keywords</th>*@
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var p in Model.ListOfProjectIssuesViewModel)
+			{
+				<tr>
+					<td><a href="/issue/@p.IssueId">@p.Name</a></td>
+					<td>@p.Description</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>
 
 
