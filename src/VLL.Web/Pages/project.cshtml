@@ -86,8 +86,26 @@
 </div>
 
 <div class="container-tool">
-	<h2>Project Regulatory Issues</h2>
-	<p> Name of issue, description and notes, Name of Regulator, Response from regulator</p>
+    <h2>Project Regulatory Issues</h2>
+    <p>Lorem ipsum</p>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                @*<th scope="col">Keywords</th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.ListOfProjectIssuesViewModel)
+            {
+                <tr>
+                    <td><a href="/issue/@p.IssueId">@p.Name</a></td>
+                    <td>@p.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 

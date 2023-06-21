@@ -18,6 +18,8 @@ namespace VLL.Web.Pages
         public List<ProjectMembersViewModel> ListOfProjectMembersViewModel { get; set; } = null!;
 
         public List<ProjectLinksViewModel> ListOfProjectLinksViewModel { get; set; } = null!;
+
+        public List<ProjectIssueViewModel> ListOfProjectIssuesViewModel { get; set; } = null!;
         //public TimeSpan TotalTime { get; set; }
         //public int QueueLength { get; set; }
 
@@ -48,6 +50,8 @@ namespace VLL.Web.Pages
             ListOfProjectMembersViewModel = await Db.GetProjectMembersByProjectId(connectionString, projectId);
             
             ListOfProjectLinksViewModel = await Db.GetLinksByProjectId(connectionString, projectId);
+            
+            ListOfProjectIssuesViewModel = await Db.GetIssuesByProjectId(connectionString, projectId);
 
             //string? jobStatusString = job.JobStatusId switch
             //{

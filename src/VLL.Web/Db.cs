@@ -210,6 +210,13 @@ namespace VLL.Web
  string? Description
 );
 
+    // used by /project/4
+    public record ProjectIssueViewModel(
+ int? IssueId,
+ string Name,
+ string? Description
+);
+
 
 
     public static class LoginStateId
@@ -1157,6 +1164,20 @@ namespace VLL.Web
             select l.LinkId, l.Url, l.Description
             from Link l
             where l.ProjectId = @ProjectId
+            ", new { projectId });
+
+            return result.ToList();
+        }
+
+        public static async Task<List<ProjectIssueViewModel>> GetIssuesByProjectId(string connectionString, int projectId)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<ProjectIssueViewModel>(@"
+
+            select IssueId, Name, Description 
+            from Issue 
+            where ProjectId = @ProjectId
             ", new { projectId });
 
             return result.ToList();
