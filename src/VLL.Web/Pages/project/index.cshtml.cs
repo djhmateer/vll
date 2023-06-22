@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Serilog;
 
-namespace VLL.Web.Pages
+namespace VLL.Web.Pages.Project
 {
 	//[Authorize(Roles = "Tier1, Tier2, Admin")]
 	public class ProjectModel : PageModel

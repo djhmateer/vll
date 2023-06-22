@@ -217,6 +217,20 @@ namespace VLL.Web
  string? Description
 );
 
+    // used by /project/edit?projectId=4
+    public record ProjectEditViewModel(
+ int? ProjectId,
+ string Name,
+ int ProjectStatusId,
+ bool IsPublic,
+ int PromoterLoginId,
+ string? ShortDescription,
+ string? Description,
+ string? Keywords,
+ string? ResearchNotes,
+ DateTime DateTimeCreatedUtc
+);
+
     // used by /issue/2
     public record IssueAllTablesViewModel(
 int? IssueId,
@@ -1231,6 +1245,21 @@ string? RegulatorName
             // When  0 is returned Dapper will return False
             return result.FirstOrDefault();
 
+        }
+
+        public static async Task<ProjectEditViewModel> GetProjectEditVMByProjectId(string connectionString, int projectId)
+        {
+            using var conn = GetOpenConnection(connectionString);
+
+            var result = await conn.QueryAsyncWithRetry<ProjectEditViewModel>(@"
+
+            select p.*
+            from Project p
+            where p.ProjectId = @ProjectId
+
+            ", new { projectId });
+
+            return result.SingleOrDefault();
         }
 
         //**HRE put in Peroject

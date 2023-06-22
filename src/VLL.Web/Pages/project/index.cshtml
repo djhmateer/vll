@@ -1,9 +1,10 @@
 ﻿@page "{projectId:int}"
-@model VLL.Web.Pages.ProjectModel
+@model VLL.Web.Pages.Project.ProjectModel
 
 @*@section Styles {
     <link href="/css/style-login.css" rel="stylesheet" type="text/css" />
 }*@
+hello world
 
 <div class="container-tool">
 	<h2>@Model.ProjectAllTablesViewModel.Name</h2>
@@ -14,7 +15,7 @@
 
 	@if (Model.CanSeeEditButton)
 	{
-		<p><a href="/project/edit/@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Edit</a></p>
+		<p><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Edit</a></p>
 	}
 
 	@*<p>projectId: @Model.ProjectFullViewModel.ProjectId</p>*@
