@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Polly;
 using Serilog;
 
@@ -16,29 +17,10 @@ namespace VLL.Web.Pages.project
 
 		[BindProperty]
 		public ProjectEditViewModel Project { get; set; } = default!;
-		//public JobViewModel Job { get; set; } = null!;
-		//public ProjectAllTablesViewModel ProjectAllTablesViewModel { get; set; } = null!;
 
-		//public List<ProjectMembersViewModel> ListOfProjectMembersViewModel { get; set; } = null!;
-
-		//public List<ProjectLinksViewModel> ListOfProjectLinksViewModel { get; set; } = null!;
-
-		//public List<ProjectIssueViewModel> ListOfProjectIssuesViewModel { get; set; } = null!;
-		//public TimeSpan TotalTime { get; set; }
-		//public int QueueLength { get; set; }
-
-		//public List<LogSmall> Logs { get; set; } = null!;
-
-		//public string? WarningMessage { get; set; }
-
-		//public bool ResultsFileExists { get; set; }
-
-
-		//public ResultModel(FaceSearchFileProcessingChannel faceSearchFileMessageChannel, HateSpeechFileProcessingChannel hateSpeechFileProcessingChannel)
-		//{
-		//    _faceSearchFileMessageChannel = faceSearchFileMessageChannel;
-		//    _hateSpeechFileProcessingChannel = hateSpeechFileProcessingChannel;
-		//}
+		[BindProperty]
+		public int SelectedProjectStatusId { get; set; }
+		public List<SelectListItem> ProjectStatusOptions { get; set; } = null!;
 
 		public async Task<IActionResult> OnGetAsync(int projectId)
 		{
@@ -46,12 +28,24 @@ namespace VLL.Web.Pages.project
 
 			var loginId = Helper.GetLoginIdAsInt(HttpContext);
 
-					// Is this Login allowed to look at this result?
+			// Is this Login allowed to edit this project?
 			//var isAllowed = await Db.CheckIfLoginIdIsAllowedToViewThisJobId(connectionString, loginId, jobId);
 
 			//if (!isAllowed) return LocalRedirect("/account/access-denied");
 
 			Project = await Db.GetProjectEditVMByProjectId(connectionString, projectId);
+
+			// ddl for projectStatusId
+			var projectStatuses = await Db.GetAllProjectStatuses(connectionString);
+
+			ProjectStatusOptions = projectStatuses.Select(x =>
+				new SelectListItem
+				{
+					Value = x.ProjectStatusId.ToString(),
+					Text = x.Name
+				}).ToList();
+			SelectedProjectStatusId = Project.ProjectStatusId;
+
 
 
 			return Page();
@@ -59,32 +53,40 @@ namespace VLL.Web.Pages.project
 
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see https://aka.ms/RazorPagesCRUD.
+		//public async Task<IActionResult> OnPostAsync(ProjectEditViewModel p)
 		public async Task<IActionResult> OnPostAsync()
 		{
 			if (!ModelState.IsValid)
 			{
+				Log.Information("Modelstate not valid");
 				return Page();
 			}
 
-			_context.Attach(Project).State = EntityState.Modified;
+			Log.Information("Saving!");
+			var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!ProjectExists(Project.ProjectId))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
 
-			return RedirectToPage("./Index");
+			var p = Project;
+			await Db.UpdateProjectByProjectId(connectionString, p.ProjectId, p.Name, SelectedProjectStatusId, p.IsPublic,
+				p.PromoterLoginId, p.ShortDescription, p.Description, p.Keywords, p.DateTimeCreatedUtc, p.ResearchNotes);
+
+			//try
+			//{
+			//	await _context.SaveChangesAsync();
+			//}
+			//catch (DbUpdateConcurrencyException)
+			//{
+			//	if (!ProjectExists(Project.ProjectId))
+			//	{
+			//		return NotFound();
+			//	}
+			//	else
+			//	{
+			//		throw;
+			//	}
+			//}
+
+			return RedirectToPage("/projects");
 		}
 	}
 }

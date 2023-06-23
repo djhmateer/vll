@@ -219,7 +219,8 @@ namespace VLL.Web
 
     // used by /project/edit?projectId=4
     public record ProjectEditViewModel(
- int? ProjectId,
+ //int? ProjectId,
+ int ProjectId,
  string Name,
  int ProjectStatusId,
  bool IsPublic,
@@ -245,8 +246,13 @@ string? ProjectName,
 string? RegulatorName
 );
 
+	public record ProjectStatus(
+	   int ProjectStatusId,
+	   string Name
+   );
 
-    public static class LoginStateId
+
+	public static class LoginStateId
     {
         public const int WaitingToBeInitiallyVerifiedByEmail = 1;
         public const int InUse = 2;
@@ -1262,11 +1268,46 @@ string? RegulatorName
             return result.SingleOrDefault();
         }
 
-        //**HRE put in Peroject
-        //GetProjectByProjectId
+		public static async Task<List<ProjectStatus>> GetAllProjectStatuses(string connectionString)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<ProjectStatus>(@"
+                select * 
+                from ProjectStatus 
+                order by ProjectStatusId 
+                ");
+
+			return result.ToList();
+		}
+
+		public static async Task UpdateProjectByProjectId(string connectionString, int projectId, string name, int projectStatusId, 
+            bool isPublic, int promoterLoginId, string shortDescription, string description, string keywords, DateTime dateTimeCreatedUtc,
+            string researchNotes)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.ExecuteAsyncWithRetry(@"
+                update project
+                set Name = @Name,
+                    ProjectStatusId = @ProjectStatusId,
+                    IsPublic = @IsPublic,
+                    PromoterLoginId = @PromoterLoginId,
+                    ShortDescription = @ShortDescription,
+                    Description = @Description,
+                    Keywords = @Keywords,
+                    DateTimeCreatedUtc = @DateTimeCreatedUtc,
+                    ResearchNotes = @ResearchNotes
+                where ProjectId = @ProjectId
+                ", new { projectId, name, projectStatusId, isPublic, promoterLoginId, shortDescription, description, keywords,
+            dateTimeCreatedUtc, researchNotes});
+		}
+
+		//**HRE put in Peroject
+		//GetProjectByProjectId
 
 
-        public static class WebLogTypeId
+		public static class WebLogTypeId
         {
             public const int Page = 1;
             public const int Asset = 2;
