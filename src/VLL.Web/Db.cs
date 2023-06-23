@@ -224,7 +224,7 @@ namespace VLL.Web
  string Name,
  int ProjectStatusId,
  bool IsPublic,
- int PromoterLoginId,
+ int? PromoterLoginId,
  string? ShortDescription,
  string? Description,
  string? Keywords,
@@ -1288,7 +1288,7 @@ string? RegulatorName
 		}
 
 		public static async Task UpdateProjectByProjectId(string connectionString, int projectId, string name, int projectStatusId, 
-            bool isPublic, int promoterLoginId, string shortDescription, string description, string keywords, DateTime dateTimeCreatedUtc,
+            bool isPublic, int? promoterLoginId, string shortDescription, string description, string keywords, DateTime dateTimeCreatedUtc,
             string researchNotes)
 		{
 			using var conn = GetOpenConnection(connectionString);
@@ -1309,7 +1309,47 @@ string? RegulatorName
             dateTimeCreatedUtc, researchNotes});
 		}
 
-        // promoter is allowed to edit project
+		public static async Task<int> CreateProjectAndReturnProjectId(string connectionString, int projectId, string name, int projectStatusId,
+		bool isPublic, int? promoterLoginId, string shortDescription, string description, string keywords, DateTime dateTimeCreatedUtc,
+		string researchNotes)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<int>(@"
+                INSERT INTO Project
+           ([Name]
+           ,[ProjectStatusId]
+           ,[IsPublic]
+           ,[PromoterLoginId]
+           ,[ShortDescription]
+           ,[Description]
+           ,[Keywords]
+           ,[ResearchNotes])
+           output inserted.ProjectId
+           VALUES
+           (@Name
+           ,@ProjectStatusId
+           ,@IsPublic
+           ,@PromoterLoginId
+           ,@ShortDescription
+           ,@Description
+           ,@Keywords
+           ,@ResearchNotes
+          )", new
+			{
+				name,
+				projectStatusId,
+				isPublic,
+				promoterLoginId,
+				shortDescription,
+				description,
+				keywords,
+				researchNotes
+			});
+			return result.Single();
+		}
+
+		// promoter is allowed to edit project
 		public static async Task<bool> CheckIfLoginIdIsAllowedToEditThisProject(string connectionString, int? loginId, int projectId)
 		{
 			using var conn = GetOpenConnection(connectionString);

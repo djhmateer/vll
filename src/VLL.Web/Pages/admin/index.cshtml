@@ -1,41 +1,48 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Admin";
+	ViewData["Title"] = "Admin";
 }
+
+<section class="box py-md">
+	<div class="box-inner">
+
 <h1>@ViewData["Title"]</h1>
+		<p>Admin page - you need to have the Admin Role Claim</p>
 
-<p>Admin page - you need to have the Admin Role Claim</p>
+		<p><a href="/project/create">Add new Project</a></p>
 
-<h4>All Logins</h4>
+		<h4>Logins</h4>
 
 
+		<p>When a user initially regisers they will be in LoginState  WaitingToBeInitiallyVerifiedByEmail and will have no RoleId</p>
+		<p>Once verified they are in LoginState InUse, and will be automatically given a RoleId of Tier1. </p>
 
-<p>When a user initially regisers they will be in LoginState  WaitingToBeInitiallyVerifiedByEmail and will have no RoleId</p>
-<p>Once verified they are in LoginState InUse, and will be automatically given a RoleId of Tier1. </p>
+		<p>To get to Tier2 an Admin has to grant them this Role by pressing edit and promoting them to Tier2.</p>
 
-<p>To get to Tier2 an Admin has to grant them this Role by pressing edit and promoting them to Tier2.</p>
+		<div class="container">
+			<div class="row">
+				<div class="col"> Email </div>
+				<div class="col"> LoginState </div>
+				<div class="col"> Role </div>
+				<div class="col"> </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col"> Email </div>
-        <div class="col"> LoginState </div>
-        <div class="col"> Role </div>
-        <div class="col"> </div>
+			</div>
 
-    </div>
+			@foreach (var login in Model.Logins)
+			{
+				<div class="row">
+					<div class="col"> @login.Email </div>
+					<div class="col"> @login.LoginStateName </div>
+					<div class="col"> @login.RoleName </div>
+					<div class="col"><a href="/admin/logins/edit/@login.LoginId">edit</a> </div>
+				</div>
+			}
+		</div>
 
-    @foreach (var login in Model.Logins)
-    {
-        <div class="row">
-            <div class="col"> @login.Email </div>
-            <div class="col"> @login.LoginStateName </div>
-            <div class="col"> @login.RoleName </div>
-            <div class="col"><a href="/admin/logins/edit/@login.LoginId">edit</a> </div>
-        </div>
-    }
-</div>
+		<br />
 
-<br />
+	</div>
+</section>
 
 

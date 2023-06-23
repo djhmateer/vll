@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -50,9 +51,17 @@ namespace VLL.Web.Pages.Project
 			}
 			else
 			{
-				// Is this loginId a Promoter of this project ie can they see the edit button?
-				// or are they an admin, so can see the edit button?
-				CanSeeEditButton = await Db.CheckIfLoginIdCanSeeEditButtonForProjectId(connectionString, (int)loginId, projectId);
+				// is this login an admin?
+				var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+				if (roles.Contains("Admin"))
+				{
+					CanSeeEditButton = true;
+				}
+				else
+				{
+					// Is this loginId a Promoter of this project ie can they see the edit button?
+					CanSeeEditButton = await Db.CheckIfLoginIdCanSeeEditButtonForProjectId(connectionString, (int)loginId, projectId);
+				}
 			}
 
 			// Is this Login allowed to look at this result?

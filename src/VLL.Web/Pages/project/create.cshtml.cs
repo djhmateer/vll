@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +11,9 @@ using Serilog;
 
 namespace VLL.Web.Pages.project
 {
-	[Authorize(Roles = "Tier1, Tier2, Admin")]
-	public class editModel : PageModel
+	[Authorize(Roles = "Admin")]
+	public class createModel : PageModel
 	{
-
 		[BindProperty]
 		public ProjectEditViewModel Project { get; set; } = default!;
 
@@ -34,21 +32,6 @@ namespace VLL.Web.Pages.project
 
 			var loginId = Helper.GetLoginIdAsInt(HttpContext);
 
-			// is current user an admin?
-			bool isAdmin = false;
-			var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-			if (roles.Contains("Admin")) isAdmin = true;
-
-			if (isAdmin) { }
-			else
-			{
-				// Is this Login allowed to view the edit screen of this project?
-				var isAllowed = await Db.CheckIfLoginIdIsAllowedToEditThisProject(connectionString, loginId, projectId);
-				if (!isAllowed) return LocalRedirect("/account/access-denied");
-			}
-
-			Project = await Db.GetProjectEditVMByProjectId(connectionString, projectId);
-
 			// ddl for projectStatusId
 			var projectStatuses = await Db.GetAllProjectStatuses(connectionString);
 			ProjectStatusOptions = projectStatuses.Select(x =>
@@ -57,17 +40,10 @@ namespace VLL.Web.Pages.project
 					Value = x.ProjectStatusId.ToString(),
 					Text = x.Name
 				}).ToList();
-			SelectedProjectStatusId = Project.ProjectStatusId;
+			//SelectedProjectStatusId = Project.ProjectStatusId;
 
-			// ddl for promoterLoginId
-			// which may be none
-			//var promoterLogins = await Db.GetAllPromoterLogins(connectionString);
-			//PromoterLoginOptions = promoterLogins.Select(x =>
-			//	new SelectListItem
-			//	{
-			//		Value = x.LoginId.ToString(),
-			//		Text = x.Email
-			//	}).ToList();
+			// ddl for promoterLoginId with added none
+			// not sure why null didn't work here, so special case of 0
 			PromoterLoginOptions = new List<SelectListItem>
 			{
 				new SelectListItem("none","0")
@@ -82,7 +58,13 @@ namespace VLL.Web.Pages.project
 				};
 				PromoterLoginOptions.Add(foo);
 			}
-			SelectedPromoterLoginId = Project.PromoterLoginId;
+
+			//PromoterLoginOptions = promoterLogins.Select(x =>
+			//	new SelectListItem
+			//	{
+			//		Value = x.LoginId.ToString(),
+			//		Text = x.Email
+			//	}).ToList();
 
 			return Page();
 		}
@@ -92,6 +74,9 @@ namespace VLL.Web.Pages.project
 		//public async Task<IActionResult> OnPostAsync(ProjectEditViewModel p)
 		public async Task<IActionResult> OnPostAsync()
 		{
+			// as is a new project
+			ModelState.Remove("ProjectId");
+
 			if (!ModelState.IsValid)
 			{
 				return Page();
@@ -99,32 +84,18 @@ namespace VLL.Web.Pages.project
 
 			var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 			var loginId = Helper.GetLoginIdAsInt(HttpContext);
-			var p = Project;
-
-			// is current user an admin?
-			bool isAdmin = false;
-			var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-			if (roles.Contains("Admin")) isAdmin = true;
-
-			if (isAdmin) { }
-			else
-			{
-				// Is current Login allowed to update the this project
-				var isAllowed = await Db.CheckIfLoginIdIsAllowedToEditThisProject(connectionString, loginId, p.ProjectId);
-				if (!isAllowed) return LocalRedirect("/account/access-denied");
-			}
+			ProjectEditViewModel p = Project;
 
 			int? foo = null;
-			if (SelectedPromoterLoginId == 0) { }
-			else
+			if (SelectedPromoterLoginId == 0) { } else
 			{
 				foo = (int)SelectedPromoterLoginId;
 			}
 
-			await Db.UpdateProjectByProjectId(connectionString, p.ProjectId, p.Name, SelectedProjectStatusId, p.IsPublic,
+			var projectId = await Db.CreateProjectAndReturnProjectId(connectionString, p.ProjectId, p.Name, SelectedProjectStatusId, p.IsPublic,
 			foo, p.ShortDescription, p.Description, p.Keywords, p.DateTimeCreatedUtc, p.ResearchNotes);
 
-			return Redirect($"/project/{p.ProjectId}");
+			return Redirect($"/project/{projectId}");
 			//return RedirectToPage($"/project/4");
 		}
 	}
