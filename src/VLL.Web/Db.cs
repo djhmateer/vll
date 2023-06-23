@@ -251,6 +251,12 @@ string? RegulatorName
 	   string Name
    );
 
+    // used as a dropdown in /project/edit
+	public record PromoterLogin(
+   int LoginId,
+   string Email
+);
+
 
 	public static class LoginStateId
     {
@@ -1301,6 +1307,36 @@ string? RegulatorName
                 where ProjectId = @ProjectId
                 ", new { projectId, name, projectStatusId, isPublic, promoterLoginId, shortDescription, description, keywords,
             dateTimeCreatedUtc, researchNotes});
+		}
+
+        // promoter is allowed to edit project
+		public static async Task<bool> CheckIfLoginIdIsAllowedToEditThisProject(string connectionString, int? loginId, int projectId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<bool>(@"
+                select count(*) 
+                from Project
+                where PromoterLoginId = @LoginId
+                    and ProjectId = @ProjectId
+                ", new { loginId, projectId });
+
+			// https://stackoverflow.com/a/31282196/26086
+			// When  0 is returned Dapper will return False
+			return result.FirstOrDefault();
+		}
+
+		public static async Task<List<PromoterLogin>> GetAllPromoterLogins(string connectionString)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<PromoterLogin>(@"
+                select LoginId, Email 
+                from Login 
+                order by LoginId 
+                ");
+
+			return result.ToList();
 		}
 
 		//**HRE put in Peroject

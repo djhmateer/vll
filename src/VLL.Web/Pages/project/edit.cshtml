@@ -4,70 +4,114 @@
 <div class="container-tool">
 	<h1>Edit</h1>
 
-	<h4>Project</h4>
-	<hr />
+	@*<h4>Project</h4>*@
+	@*<hr />*@
+
+
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-8">
 			<form method="post">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 				<input type="hidden" asp-for="Project.ProjectId" />
-				<div class="form-group">
-					<label asp-for="Project.Name" class="control-label"></label>
-					<input asp-for="Project.Name" class="form-control" />
-					<span asp-validation-for="Project.Name" class="text-danger"></span>
-				</div>
 
+				<div class="form-group col-xs-4">
+					<label asp-for="Project.Name" class="control-label"></label>
+					<input asp-for="Project.Name" class="form-control " />
+					<span asp-validation-for="Project.Name" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Keep project name short</small>
+				</div>
+				<br />
+
+				<!-- projectstatus ddl -->
 				<div class="form-group">
 					<label asp-for="Project.ProjectStatusId" class="control-label"></label>
 					<select asp-for="SelectedProjectStatusId" class="form-control" asp-items="Model.ProjectStatusOptions"></select>
 					<span asp-validation-for="SelectedProjectStatusId" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Challenge to Ongoing to Completed</small>
 				</div>
+				<br />
 
 				<div class="form-group form-check">
 					<label class="form-check-label">
 						<input class="form-check-input" asp-for="Project.IsPublic" /> @Html.DisplayNameFor(model => model.Project.IsPublic)
 					</label>
+
 				</div>
+				<small id="emailHelp" class="form-text text-muted">Once non public only an admin can see this</small>
+				<br />
+				<br />
+
 				<div class="form-group">
 					<label asp-for="Project.PromoterLoginId" class="control-label"></label>
-					<input asp-for="Project.PromoterLoginId" class="form-control" />
-					<span asp-validation-for="Project.PromoterLoginId" class="text-danger"></span>
+					<select asp-for="SelectedPromoterLoginId" class="form-control" asp-items="Model.PromoterLoginOptions"></select>
+					<span asp-validation-for="SelectedPromoterLoginId	" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Careful if you are a promoter editing and delegate onto someone else</small>
 				</div>
+				<br />
+
+
 				<div class="form-group">
 					<label asp-for="Project.ShortDescription" class="control-label"></label>
 					<input asp-for="Project.ShortDescription" class="form-control" />
 					<span asp-validation-for="Project.ShortDescription" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Very short for home page and lists</small>
 				</div>
+				<br />
+
+
 				<div class="form-group">
 					<label asp-for="Project.Description" class="control-label"></label>
-					<input asp-for="Project.Description" class="form-control" />
+					@*<input asp-for="Project.Description" class="form-control" />*@
+					@*<textarea asp-for="Project.Description" />@Model.Project.Description</textarea>*@
+					<textarea asp-for="Project.Description" class="form-control" rows="15"></textarea>
 					<span asp-validation-for="Project.Description" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Can include html eg &lt;br /&gt; to break up paragraphs</small>
 				</div>
+				<br />
+
+
 				<div class="form-group">
 					<label asp-for="Project.Keywords" class="control-label"></label>
 					<input asp-for="Project.Keywords" class="form-control" />
 					<span asp-validation-for="Project.Keywords" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Separate multiple with a comma</small>
 				</div>
+				<br />
+
+
 				<div class="form-group">
-					<label asp-for="Project.ResearchNotes" class="control-label"></label>
-					<input asp-for="Project.ResearchNotes" class="form-control" />
+					@*<label asp-for="Project.ResearchNotes" class="control-label"></label>*@
+					<label class="control-label">Notes</label>
+					@*<input asp-for="Project.ResearchNotes" class="form-control" />*@
+					<textarea asp-for="Project.ResearchNotes" class="form-control" rows="10"></textarea>
 					<span asp-validation-for="Project.ResearchNotes" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Can include html eg &lt;br /&gt; to break up paragraphs</small>
 				</div>
+				<br />
+
+
 				<div class="form-group">
 					<label asp-for="Project.DateTimeCreatedUtc" class="control-label"></label>
 					<input asp-for="Project.DateTimeCreatedUtc" class="form-control" />
 					<span asp-validation-for="Project.DateTimeCreatedUtc" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">The date created of the project - used in ordering of home page items with most recent first</small>
 				</div>
+				<br />
+
 				<div class="form-group">
-					<input type="submit" value="Save" class="btn btn-primary" />
+					@*<input type="submit" value="Save" class="btn btn-primary" />*@
+					<input type="submit" value="Save" class="btn btn-blue" />
 				</div>
 			</form>
 		</div>
 	</div>
 
+	<br />
 	<div>
-		<a asp-page="./Index">Back to List</a>
+		@*<a asp-page="/">Back to List</a>*@
+		@*<a asp-page="/project/@Model.Project.ProjectId">Back to Project</a>*@
+		<a href="/project/@Model.Project.ProjectId">Back to Project</a>
 	</div>
 </div>
 

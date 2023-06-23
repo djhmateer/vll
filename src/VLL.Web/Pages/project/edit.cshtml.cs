@@ -22,22 +22,25 @@ namespace VLL.Web.Pages.project
 		public int SelectedProjectStatusId { get; set; }
 		public List<SelectListItem> ProjectStatusOptions { get; set; } = null!;
 
+		[BindProperty]
+		public int SelectedPromoterLoginId { get; set; }
+		public List<SelectListItem> PromoterLoginOptions { get; set; } = null!;
+
+
 		public async Task<IActionResult> OnGetAsync(int projectId)
 		{
 			var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 
 			var loginId = Helper.GetLoginIdAsInt(HttpContext);
 
-			// Is this Login allowed to edit this project?
-			//var isAllowed = await Db.CheckIfLoginIdIsAllowedToViewThisJobId(connectionString, loginId, jobId);
-
-			//if (!isAllowed) return LocalRedirect("/account/access-denied");
+			// Is this Login allowed to view the edit screen of this project?
+			var isAllowed = await Db.CheckIfLoginIdIsAllowedToEditThisProject(connectionString, loginId, projectId);
+			if (!isAllowed) return LocalRedirect("/account/access-denied");
 
 			Project = await Db.GetProjectEditVMByProjectId(connectionString, projectId);
 
 			// ddl for projectStatusId
 			var projectStatuses = await Db.GetAllProjectStatuses(connectionString);
-
 			ProjectStatusOptions = projectStatuses.Select(x =>
 				new SelectListItem
 				{
@@ -45,6 +48,16 @@ namespace VLL.Web.Pages.project
 					Text = x.Name
 				}).ToList();
 			SelectedProjectStatusId = Project.ProjectStatusId;
+
+			// ddl for promoterLoginId
+			var promoterLogins = await Db.GetAllPromoterLogins(connectionString);
+			PromoterLoginOptions = promoterLogins.Select(x =>
+				new SelectListItem
+				{
+					Value = x.LoginId.ToString(),
+					Text = x.Email
+				}).ToList();
+			SelectedPromoterLoginId = Project.PromoterLoginId;
 
 
 
@@ -58,35 +71,23 @@ namespace VLL.Web.Pages.project
 		{
 			if (!ModelState.IsValid)
 			{
-				Log.Information("Modelstate not valid");
 				return Page();
 			}
 
-			Log.Information("Saving!");
 			var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
-
-
+			var loginId = Helper.GetLoginIdAsInt(HttpContext);
 			var p = Project;
+
+			// Is current Login allowed to update the this project
+			var isAllowed = await Db.CheckIfLoginIdIsAllowedToEditThisProject(connectionString, loginId, p.ProjectId);
+			if (!isAllowed) return LocalRedirect("/account/access-denied");
+
+
 			await Db.UpdateProjectByProjectId(connectionString, p.ProjectId, p.Name, SelectedProjectStatusId, p.IsPublic,
-				p.PromoterLoginId, p.ShortDescription, p.Description, p.Keywords, p.DateTimeCreatedUtc, p.ResearchNotes);
+			SelectedPromoterLoginId, p.ShortDescription, p.Description, p.Keywords, p.DateTimeCreatedUtc, p.ResearchNotes);
 
-			//try
-			//{
-			//	await _context.SaveChangesAsync();
-			//}
-			//catch (DbUpdateConcurrencyException)
-			//{
-			//	if (!ProjectExists(Project.ProjectId))
-			//	{
-			//		return NotFound();
-			//	}
-			//	else
-			//	{
-			//		throw;
-			//	}
-			//}
-
-			return RedirectToPage("/projects");
+			return Redirect($"/project/{p.ProjectId}");
+			//return RedirectToPage($"/project/4");
 		}
 	}
 }
