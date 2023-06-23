@@ -69,6 +69,7 @@
     <Build Include="dbo\Tables\Link.sql" />
     <Build Include="dbo\Tables\Issue.sql" />
     <Build Include="dbo\Tables\Regulator.sql" />
+    <Build Include="dbo\Tables\IssueStatus.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="insertData.sqlx" />

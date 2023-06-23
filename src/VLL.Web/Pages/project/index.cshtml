@@ -44,10 +44,16 @@
 <div class="container-tool">
 	<h2>Project Members</h2>
 	<p>Lorem ipsum</p>
+	@if (Model.CanSeeEditButton)
+	{
+		<p><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Add Existing Member</a></p>
+		<p><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Invite new Member</a></p>
+	}
 	<table class="table table-hover">
 		<thead>
 			<tr>
 				<th scope="col">Email</th>
+				@*<th scope="col"></th>*@
 				@* <th scope="col">Name</th>
 				<th scope="col">Phone</th>
 				<th scope="col">Institution</th>*@
@@ -58,6 +64,11 @@
 			{
 				<tr>
 					<td><a href="/project/">@p.Email</a></td>
+					@if (Model.CanSeeEditButton)
+					{
+						<td><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn ">Remove Member</a></td>
+					}
+
 					@*<td></td>
 				<td></td>
 				<td></td>*@
@@ -70,11 +81,16 @@
 <div class="container-tool">
 	<h2>Project Links</h2>
 	<p>Lorem ipsum</p>
+	@if (Model.CanSeeEditButton)
+	{
+		<p><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Add Link</a></p>
+	}
 	<table class="table table-hover">
 		<thead>
 			<tr>
 				<th scope="col">Link</th>
 				<th scope="col">Description</th>
+				@*<th scope="col"></th>*@
 			</tr>
 		</thead>
 		<tbody>
@@ -83,8 +99,10 @@
 				<tr>
 					<td><a href="@p.Url">@p.Url</a></td>
 					<td>@p.Description</td>
-					<td></td>
-					<td></td>
+					@if (Model.CanSeeEditButton)
+					{
+						<td><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn ">Remove Link</a></td>
+					}
 				</tr>
 			}
 		</tbody>
@@ -94,12 +112,16 @@
 <div class="container-tool">
 	<h2>Project Regulatory Issues</h2>
 	<p>Lorem ipsum</p>
+	@if (Model.CanSeeEditButton)
+	{
+		<p><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Add Issue</a></p>
+	}
 	<table class="table table-hover">
 		<thead>
 			<tr>
 				<th scope="col">Name</th>
 				<th scope="col">Description</th>
-				@*<th scope="col">Keywords</th>*@
+				<th scope="col">Regulator</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -108,6 +130,7 @@
 				<tr>
 					<td><a href="/issue/@p.IssueId">@p.Name</a></td>
 					<td>@p.Description</td>
+					<td>@p.RegulatorName</td>
 				</tr>
 			}
 		</tbody>

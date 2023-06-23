@@ -36,7 +36,16 @@ namespace VLL.Web.Pages
             var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 
             //var jobs = await Db.GetJobsForLoginId(connectionString, loginId);
-            Issues = await Db.GetAllIssues(connectionString);
+            var isAdmin = Helper.IsAdmin(HttpContext);
+
+            if (isAdmin)
+            {
+                Issues = await Db.GetAllIssues(connectionString);
+            } else
+            {
+
+                Issues = await Db.GetAllPublicIssues(connectionString);
+            }
 
             //var projects = new List<ProjectFullViewModel>();
             //foreach (var p in projects)

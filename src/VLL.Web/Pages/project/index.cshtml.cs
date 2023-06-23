@@ -44,6 +44,8 @@ namespace VLL.Web.Pages.Project
 
 			var loginId = Helper.GetLoginIdAsInt(HttpContext);
 
+			var isAdmin = Helper.IsAdmin(HttpContext);
+
 			if (loginId == null)
 			{
 				// not logged in so can't see edit button
@@ -51,9 +53,9 @@ namespace VLL.Web.Pages.Project
 			}
 			else
 			{
-				// is this login an admin?
-				var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-				if (roles.Contains("Admin"))
+				//var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+				//if (roles.Contains("Admin"))
+				if (isAdmin)
 				{
 					CanSeeEditButton = true;
 				}

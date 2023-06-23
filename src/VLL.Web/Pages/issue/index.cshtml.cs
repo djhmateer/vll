@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Serilog;
 
-namespace VLL.Web.Pages
+namespace VLL.Web.Pages.issue
 {
     //[Authorize(Roles = "Tier1, Tier2, Admin")]
     public class IssueModel : PageModel
@@ -15,6 +15,7 @@ namespace VLL.Web.Pages
         //public JobViewModel Job { get; set; } = null!;
         public IssueAllTablesViewModel IssueAllTablesViewModel { get; set; } = null!;
 
+        public bool CanSeeEditButton { get; set; }
 
         //public List<ProjectIssueViewModel> ListOfProjectIssuesViewModel { get; set; } = null!;
 
@@ -36,6 +37,33 @@ namespace VLL.Web.Pages
         public async Task<IActionResult> OnGetAsync(int issueId)
         {
             var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
+
+            var loginId = Helper.GetLoginIdAsInt(HttpContext);
+
+            if (loginId == null)
+            {
+                // not logged in so can't see edit button
+                CanSeeEditButton = false;
+            }
+            else
+            {
+                // is this login an admin?
+                var isAdmin = Helper.IsAdmin(HttpContext);
+
+                //var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+                //if (roles.Contains("Admin"))
+                if (isAdmin)
+                {
+                    CanSeeEditButton = true;
+                }
+                else
+                {
+                    // Is this loginId a Promoter of this project ie can they see the edit button?
+                    //CanSeeEditButton = await Db.CheckIfLoginIdCanSeeEditButtonForProjectId(connectionString, (int)loginId, projectId);
+                }
+            }
+
+
             //var loginId = Helper.GetLoginIdAsInt(HttpContext);
 
             // Is this Login allowed to look at this result?
@@ -47,9 +75,9 @@ namespace VLL.Web.Pages
             IssueAllTablesViewModel = await Db.GetIssueByIssueId(connectionString, issueId);
 
             //ListOfProjectMembersViewModel = await Db.GetProjectMembersByProjectId(connectionString, projectId);
-            
+
             //ListOfProjectLinksViewModel = await Db.GetLinksByProjectId(connectionString, projectId);
-            
+
             //ListOfProjectIssuesViewModel = await Db.GetIssuesByProjectId(connectionString, projectId);
 
             //string? jobStatusString = job.JobStatusId switch

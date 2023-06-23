@@ -214,7 +214,8 @@ namespace VLL.Web
     public record ProjectIssueViewModel(
  int? IssueId,
  string Name,
- string? Description
+ string? Description,
+ string? RegulatorName
 );
 
     // used by /project/edit?projectId=4
@@ -232,12 +233,31 @@ namespace VLL.Web
  DateTime DateTimeCreatedUtc
 );
 
-    // used by /issue/2
-    public record IssueAllTablesViewModel(
+	// used by /issue/edit?issueId=2
+	public record IssueEditViewModel(
 int? IssueId,
 int ProjectId,
 int? RegulatorId,
 string Name,
+int IssueStatusId,
+bool IsPublic,
+string? Description,
+string? Keywords,
+string? Response,
+DateTime DateTimeCreatedUtc,
+string? ProjectName
+//string? RegulatorName
+);
+
+
+	// used by /issue/2
+	public record IssueAllTablesViewModel(
+int? IssueId,
+int ProjectId,
+int? RegulatorId,
+string Name,
+int IssueStatusId,
+bool IsPublic,
 string? Description,
 string? Keywords,
 string? Response,
@@ -251,10 +271,21 @@ string? RegulatorName
 	   string Name
    );
 
-    // used as a dropdown in /project/edit
+	public record IssueStatus(
+   int IssueStatusId,
+   string Name
+);
+
+	// used as a dropdown in /project/edit
 	public record PromoterLogin(
    int LoginId,
    string Email
+);
+
+	public record Regulator(
+int RegulatorId,
+string Name,
+string? ContactEmail
 );
 
 
@@ -1067,7 +1098,7 @@ string? RegulatorName
         }
 
         // HERE
-        public static async Task<List<ProjectViewModel>> GetAllChallengeProjects(string connectionString)
+        public static async Task<List<ProjectViewModel>> GetAllPublicChallengeProjects(string connectionString)
         {
             using var conn = GetOpenConnection(connectionString);
 
@@ -1082,7 +1113,7 @@ string? RegulatorName
             return result.ToList();
         }
 
-        public static async Task<List<ProjectViewModel>> GetAllOngoingProjects(string connectionString)
+        public static async Task<List<ProjectViewModel>> GetAllPublicOngoingProjects(string connectionString)
         {
             using var conn = GetOpenConnection(connectionString);
 
@@ -1097,7 +1128,7 @@ string? RegulatorName
             return result.ToList();
         }
 
-        public static async Task<List<ProjectViewModel>> GetAllCompletedProjects(string connectionString)
+        public static async Task<List<ProjectViewModel>> GetAllPublicCompletedProjects(string connectionString)
         {
             using var conn = GetOpenConnection(connectionString);
 
@@ -1112,6 +1143,7 @@ string? RegulatorName
             return result.ToList();
         }
 
+        // used by /issues/  for Admin
         public static async Task<List<IssueViewModel>> GetAllIssues(string connectionString)
         {
             using var conn = GetOpenConnection(connectionString);
@@ -1125,8 +1157,24 @@ string? RegulatorName
             return result.ToList();
         }
 
-        // used in /projects
-        public static async Task<List<ProjectFullViewModel>> GetAllProjects(string connectionString, int? statusId = null)
+		public static async Task<List<IssueViewModel>> GetAllPublicIssues(string connectionString)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<IssueViewModel>(@"
+                select IssueId, Name, Description
+                from Issue 
+                where IsPublic = 1
+                order by DateTimeCreatedUtc desc
+                ");
+
+			return result.ToList();
+		}
+
+		// used in /projects
+        // only Admin - see GetAllPublicProjects below
+        // remember to update both!
+		public static async Task<List<ProjectFullViewModel>> GetAllProjects(string connectionString, int? statusId = null)
         {
             using var conn = GetOpenConnection(connectionString);
 
@@ -1136,11 +1184,11 @@ string? RegulatorName
                 -- left join so if no promoterLoginId we still get result
                 left join login l on p.PromoterLoginId = l.LoginId
             ";
+            // challenge, ongoing or completed
             if (statusId == 1 || statusId == 2 || statusId == 3)
             {
                 sql += @"
                 where p.ProjectStatusId = @StatusId
-                and p.IsPublic = 1
                 order by p.DateTimeCreatedUtc desc
                 ";
             }
@@ -1148,7 +1196,6 @@ string? RegulatorName
             {
                 // default to display all
                 sql += @"
-                where p.IsPublic = 1
                 order by p.DateTimeCreatedUtc desc
                 ";
             }
@@ -1157,8 +1204,42 @@ string? RegulatorName
             return result.ToList();
         }
 
-        // /project/2
-        public static async Task<ProjectAllTablesViewModel> GetProjectByProjectId(string connectionString, int projectId)
+        // see above for admin query
+        // remember to update both!
+		public static async Task<List<ProjectFullViewModel>> GetAllPublicProjects(string connectionString, int? statusId = null)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			string sql = @"
+                select p.*, l.Email as PromoterEmail
+                from Project p
+                -- left join so if no promoterLoginId we still get result
+                left join login l on p.PromoterLoginId = l.LoginId
+            ";
+			// challenge, ongoing or completed
+			if (statusId == 1 || statusId == 2 || statusId == 3)
+			{
+				sql += @"
+                where p.ProjectStatusId = @StatusId
+                and p.IsPublic = 1
+                order by p.DateTimeCreatedUtc desc
+                ";
+			}
+			else
+			{
+				// default to display all
+				sql += @"
+                where p.IsPublic = 1
+                order by p.DateTimeCreatedUtc desc
+                ";
+			}
+
+			var result = await conn.QueryAsyncWithRetry<ProjectFullViewModel>(sql, new { statusId });
+			return result.ToList();
+		}
+
+		// /project/2
+		public static async Task<ProjectAllTablesViewModel> GetProjectByProjectId(string connectionString, int projectId)
         {
             using var conn = GetOpenConnection(connectionString);
 
@@ -1214,8 +1295,9 @@ string? RegulatorName
 
             var result = await conn.QueryAsyncWithRetry<ProjectIssueViewModel>(@"
 
-            select IssueId, Name, Description 
-            from Issue 
+            select i.IssueId, i.Name, i.Description, r.Name as RegulatorName
+            from Issue i
+            left join Regulator r on i.RegulatorId = r.RegulatorId
             where ProjectId = @ProjectId
             ", new { projectId });
 
@@ -1374,6 +1456,48 @@ string? RegulatorName
                 select LoginId, Email 
                 from Login 
                 order by LoginId 
+                ");
+
+			return result.ToList();
+		}
+
+		public static async Task<List<Regulator>> GetAllRegulators(string connectionString)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<Regulator>(@"
+                select * 
+                from Regulator 
+                order by RegulatorId 
+                ");
+
+			return result.ToList();
+		}
+
+		public static async Task<IssueEditViewModel> GetIssueEditVMByIssueId(string connectionString, int issueId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<IssueEditViewModel>(@"
+
+            select i.*, p.Name as ProjectName 
+            from Issue i
+            join Project p on p.ProjectId = i.ProjectId
+            where IssueId = @IssueId
+
+            ", new { issueId });
+
+			return result.SingleOrDefault();
+		}
+
+		public static async Task<List<IssueStatus>> GetAllIssueStatuses(string connectionString)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<IssueStatus>(@"
+                select * 
+                from IssueStatus 
+                order by IssueStatusId 
                 ");
 
 			return result.ToList();

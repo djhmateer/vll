@@ -23,11 +23,11 @@ namespace VLL.Web.Pages
 
             //var challenges = await Db.GetAllChallengeProjects(connectionString);
 
-            Challenges = await Db.GetAllChallengeProjects(connectionString);
-            Ongoing = await Db.GetAllOngoingProjects(connectionString);
-            Completed = await Db.GetAllCompletedProjects(connectionString);
+            Challenges = await Db.GetAllPublicChallengeProjects(connectionString);
+            Ongoing = await Db.GetAllPublicOngoingProjects(connectionString);
+            Completed = await Db.GetAllPublicCompletedProjects(connectionString);
 
-            Issues = await Db.GetAllIssues(connectionString);
+            Issues = await Db.GetAllPublicIssues(connectionString);
         }
     }
 }

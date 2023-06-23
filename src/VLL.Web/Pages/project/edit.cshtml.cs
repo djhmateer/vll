@@ -35,9 +35,7 @@ namespace VLL.Web.Pages.project
 			var loginId = Helper.GetLoginIdAsInt(HttpContext);
 
 			// is current user an admin?
-			bool isAdmin = false;
-			var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-			if (roles.Contains("Admin")) isAdmin = true;
+			bool isAdmin = Helper.IsAdmin(HttpContext);
 
 			if (isAdmin) { }
 			else
@@ -101,10 +99,7 @@ namespace VLL.Web.Pages.project
 			var loginId = Helper.GetLoginIdAsInt(HttpContext);
 			var p = Project;
 
-			// is current user an admin?
-			bool isAdmin = false;
-			var roles = User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-			if (roles.Contains("Admin")) isAdmin = true;
+			bool isAdmin = Helper.IsAdmin(HttpContext);
 
 			if (isAdmin) { }
 			else

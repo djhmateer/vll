@@ -1,5 +1,5 @@
 ﻿@page "{issueId:int}"
-@model VLL.Web.Pages.IssueModel
+@model IssueModel
 
 @*@section Styles {
     <link href="/css/style-login.css" rel="stylesheet" type="text/css" />
@@ -7,6 +7,11 @@
 
 <div class="container-tool">
 	<h2>@Model.IssueAllTablesViewModel.Name</h2>
+
+    @if (Model.CanSeeEditButton)
+    {
+        <p><a href="/issue/edit?issueId=@Model.IssueAllTablesViewModel.IssueId" class="btn btn-blue">Edit</a></p>
+    }
 
 	@*<p>Project Logo / Images?</p>*@
 	@*<img src="https://davemateer.com/assets/2022-05-19/1.jpg" width="200" />*@
@@ -18,7 +23,7 @@
 
 	<p>Date Created: @Model.IssueAllTablesViewModel.DateTimeCreatedUtc.UtcToGmt().ToString("dd/MM/yyyy")</p>
 
-@*	<p>Is Public: @Model.ProjectFullViewModel.IsPublic</p>*@
+	<p>Is Public: @Model.IssueAllTablesViewModel.IsPublic</p>
 	@*<p>Promoter: <a href="">@Model.ProjectAllTablesViewModel.PromoterEmail</a></p>*@
 
 	@*<p>Short Description: @Model.ProjectAllTablesViewModel.ShortDescription</p>*@

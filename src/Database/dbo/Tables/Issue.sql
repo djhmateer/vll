@@ -3,6 +3,8 @@
     [ProjectId]          INT            NOT NULL,
     [RegulatorId]        INT            NULL,
     [Name]               NVARCHAR (255) NOT NULL,
+    [IssueStatusId]      INT            NOT NULL,
+    [IsPublic]           BIT            NOT NULL,
     [Description]        NVARCHAR (MAX) NULL,
     [Keywords]           NVARCHAR (MAX) NULL,
     [Response]           NVARCHAR (MAX) NULL,
@@ -11,6 +13,8 @@
     CONSTRAINT [FK_Issue_Project] FOREIGN KEY ([ProjectId]) REFERENCES [dbo].[Project] ([ProjectId]),
     CONSTRAINT [FK_Issue_Regulator] FOREIGN KEY ([RegulatorId]) REFERENCES [dbo].[Regulator] ([RegulatorId])
 );
+
+
 
 
 

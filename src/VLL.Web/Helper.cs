@@ -185,8 +185,21 @@ namespace VLL.Web
 
 	public static class Helper
 	{
+        public static bool IsAdmin(HttpContext httpContext)
+        {
+			bool isAdmin = false;
+			var roles = httpContext.User?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+			if (roles.Contains("Admin")) isAdmin = true;
 
-		public static int? GetLoginIdAsInt(HttpContext httpContext)
+			//var loginIdString = httpContext.User.Claims.FirstOrDefault(x => x.Type == "Admin")?.Value;
+
+            //bool isAdmin = loginIdString is { };
+
+            return isAdmin;
+        }
+
+
+        public static int? GetLoginIdAsInt(HttpContext httpContext)
 		{
 			var loginIdString = httpContext.User.Claims.FirstOrDefault(x => x.Type == "LoginId")?.Value;
 
