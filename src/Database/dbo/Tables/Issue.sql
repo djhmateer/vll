@@ -10,9 +10,12 @@
     [Response]           NVARCHAR (MAX) NULL,
     [DateTimeCreatedUtc] DATETIME2 (7)  CONSTRAINT [DF_Issue_DateTimeCreatedUtc] DEFAULT (getutcdate()) NULL,
     CONSTRAINT [PK_Issue] PRIMARY KEY CLUSTERED ([IssueId] ASC),
+    CONSTRAINT [FK_Issue_IssueStatus] FOREIGN KEY ([IssueStatusId]) REFERENCES [dbo].[IssueStatus] ([IssueStatusId]),
     CONSTRAINT [FK_Issue_Project] FOREIGN KEY ([ProjectId]) REFERENCES [dbo].[Project] ([ProjectId]),
     CONSTRAINT [FK_Issue_Regulator] FOREIGN KEY ([RegulatorId]) REFERENCES [dbo].[Regulator] ([RegulatorId])
 );
+
+
 
 
 

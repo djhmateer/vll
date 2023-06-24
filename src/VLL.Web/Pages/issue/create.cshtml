@@ -1,0 +1,135 @@
+﻿@page
+@model VLL.Web.Pages.issue.createModel
+
+<div class="container-tool">
+	<h1>Create Issue</h1>
+
+
+	<div class="row">
+		<div class="col-md-8">
+			<form method="post">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+				<input type="hidden" asp-for="ProjectId" />
+
+				<div class="form-group col-xs-4">
+					<label asp-for="Issue.Name" class="control-label"></label>
+					<input asp-for="Issue.Name" class="form-control " />
+					<span asp-validation-for="Issue.Name" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Keep issue name short</small>
+				</div>
+				<br />
+
+
+				<div class="form-group col-xs-4">
+					<label class="control-label">Associated Project</label>
+					@*<label asp-for="Issue.ProjectName" class="control-label"></label>*@
+					<p>@Model.ProjectName</p>
+					<small id="emailHelp" class="form-text text-muted">The project you are creating an issue on</small>
+				</div>
+				<br />
+
+				<!-- issuestatus ddl -->
+				<div class="form-group">
+					@*<label asp-for="Issue.IssueStatusId" class="control-label"></label>*@
+					<label class="control-label">Status</label>
+					<select asp-for="SelectedIssueStatusId" class="form-control" asp-items="Model.IssueStatusOptions"></select>
+					<span asp-validation-for="SelectedIssueStatusId" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Ongoing to Complete</small>
+				</div>
+				<br />
+
+				<div class="form-group form-check">
+					<label class="form-check-label">
+						<input class="form-check-input" asp-for="Issue.IsPublic" /> @Html.DisplayNameFor(model => model.Issue.IsPublic)
+					</label>
+
+				</div>
+				<small id="emailHelp" class="form-text text-muted">Once non public only an admin can see this</small>
+				<br />
+				<br />
+
+				@*
+				<div class="form-group">
+					<label asp-for="Project.PromoterLoginId" class="control-label"></label>
+					<select asp-for="SelectedPromoterLoginId" class="form-control" asp-items="Model.PromoterLoginOptions"></select>
+					<span asp-validation-for="SelectedPromoterLoginId	" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Careful if you are a promoter editing and delegate onto someone else</small>
+				</div>
+				<br />
+
+
+				<div class="form-group">
+					<label asp-for="Project.ShortDescription" class="control-label"></label>
+					<input asp-for="Project.ShortDescription" class="form-control" />
+					<span asp-validation-for="Project.ShortDescription" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Very short for home page and lists</small>
+				</div>
+				<br />
+				*@
+
+	<!-- regulator ddl -->
+				<div class="form-group">
+					@*<label asp-for="Issue.IssueStatusId" class="control-label"></label>*@
+					<label class="control-label">Regulator</label>
+					<select asp-for="SelectedRegulatorId" class="form-control" asp-items="Model.RegulatorOptions"></select>
+					<span asp-validation-for="SelectedRegulatorId" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Regulator. none if none yet assigned</small>
+				</div>
+				<br />
+
+
+
+				<div class="form-group">
+					<label asp-for="Issue.Description" class="control-label"></label>
+					<textarea asp-for="Issue.Description" class="form-control" rows="5"></textarea>
+					<span asp-validation-for="Issue.Description" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Can include html eg &lt;br /&gt; to break up paragraphs</small>
+				</div>
+				<br />
+
+
+				<div class="form-group">
+					<label asp-for="Issue.Keywords" class="control-label"></label>
+					<input asp-for="Issue.Keywords" class="form-control" />
+					<span asp-validation-for="Issue.Keywords" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Separate multiple with a comma</small>
+				</div>
+				<br />
+
+
+				<div class="form-group">
+					<label asp-for="Issue.Response" class="control-label"></label>
+					<textarea asp-for="Issue.Response" class="form-control" rows="5"></textarea>
+					<span asp-validation-for="Issue.Response" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Can include html eg &lt;br /&gt; to break up paragraphs</small>
+				</div>
+				<br />
+
+@*
+				<div class="form-group">
+					<label asp-for="Issue.DateTimeCreatedUtc" class="control-label"></label>
+					<input asp-for="Issue.DateTimeCreatedUtc" class="form-control" />
+					<span asp-validation-for="Issue.DateTimeCreatedUtc" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">The date created of the issue - used in ordering of home page issue items with most recent first</small>
+				</div>*@
+				<br />
+
+				<div class="form-group">
+					<input type="submit" value="Save" class="btn btn-blue" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<br />
+@*	<div>
+		<a href="/project/@Model.Project.ProjectId">Back to Project</a>
+	</div>*@
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

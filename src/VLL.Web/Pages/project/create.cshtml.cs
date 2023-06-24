@@ -26,7 +26,7 @@ namespace VLL.Web.Pages.project
 		public List<SelectListItem> PromoterLoginOptions { get; set; } = null!;
 
 
-		public async Task<IActionResult> OnGetAsync(int projectId)
+		public async Task<IActionResult> OnGetAsync()
 		{
 			var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 
@@ -40,7 +40,6 @@ namespace VLL.Web.Pages.project
 					Value = x.ProjectStatusId.ToString(),
 					Text = x.Name
 				}).ToList();
-			//SelectedProjectStatusId = Project.ProjectStatusId;
 
 			// ddl for promoterLoginId with added none
 			// not sure why null didn't work here, so special case of 0
@@ -58,13 +57,6 @@ namespace VLL.Web.Pages.project
 				};
 				PromoterLoginOptions.Add(foo);
 			}
-
-			//PromoterLoginOptions = promoterLogins.Select(x =>
-			//	new SelectListItem
-			//	{
-			//		Value = x.LoginId.ToString(),
-			//		Text = x.Email
-			//	}).ToList();
 
 			return Page();
 		}
@@ -96,7 +88,6 @@ namespace VLL.Web.Pages.project
 			foo, p.ShortDescription, p.Description, p.Keywords, p.DateTimeCreatedUtc, p.ResearchNotes);
 
 			return Redirect($"/project/{projectId}");
-			//return RedirectToPage($"/project/4");
 		}
 	}
 }

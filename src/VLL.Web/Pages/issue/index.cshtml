@@ -19,6 +19,8 @@
 
 	@*<p>projectId: @Model.ProjectFullViewModel.ProjectId</p>*@
 
+	<p>Status: @Model.IssueAllTablesViewModel.IssueStatusName</p>
+
 	<p>Project: <a href="/project/@Model.IssueAllTablesViewModel.ProjectId">@Model.IssueAllTablesViewModel.ProjectName</a></p>
 
 	<p>Date Created: @Model.IssueAllTablesViewModel.DateTimeCreatedUtc.UtcToGmt().ToString("dd/MM/yyyy")</p>

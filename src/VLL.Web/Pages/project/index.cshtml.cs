@@ -71,13 +71,17 @@ namespace VLL.Web.Pages.Project
 
 			//if (!isAllowed) return LocalRedirect("/account/access-denied");
 
+
+
 			ProjectAllTablesViewModel = await Db.GetProjectByProjectId(connectionString, projectId);
 
 			ListOfProjectMembersViewModel = await Db.GetProjectMembersByProjectId(connectionString, projectId);
 
 			ListOfProjectLinksViewModel = await Db.GetLinksByProjectId(connectionString, projectId);
 
-			ListOfProjectIssuesViewModel = await Db.GetIssuesByProjectId(connectionString, projectId);
+			var getPrivateIssues = false;
+			if (isAdmin) getPrivateIssues = true; 
+			ListOfProjectIssuesViewModel = await Db.GetIssuesByProjectId(connectionString, projectId, getPrivateIssues);
 
 			//string? jobStatusString = job.JobStatusId switch
 			//{

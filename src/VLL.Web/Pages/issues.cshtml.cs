@@ -43,7 +43,6 @@ namespace VLL.Web.Pages
                 Issues = await Db.GetAllIssues(connectionString);
             } else
             {
-
                 Issues = await Db.GetAllPublicIssues(connectionString);
             }
 

@@ -13,7 +13,7 @@ using Serilog;
 namespace VLL.Web.Pages.issue
 {
 	[Authorize(Roles = "Tier1, Tier2, Admin")]
-	public class editModel : PageModel
+	public class createModel : PageModel
 	{
 
 		[BindProperty]
@@ -27,24 +27,24 @@ namespace VLL.Web.Pages.issue
 		public int? SelectedRegulatorId { get; set; }
 		public List<SelectListItem> RegulatorOptions { get; set; } = null!;
 
+		public string ProjectName { get; set; } = default!;
+		public int ProjectId { get; set; } = default!;
 
-		public async Task<IActionResult> OnGetAsync(int issueId)
+		public async Task<IActionResult> OnGetAsync(int projectId)
 		{
 			var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 
 			var loginId = Helper.GetLoginIdAsInt(HttpContext);
 
-			Issue = await Db.GetIssueEditVMByIssueId(connectionString, issueId);
-
-			// is current user an admin?
 			bool isAdmin = Helper.IsAdmin(HttpContext);
 
 			if (isAdmin) { }
 			else
 			{
-				// Is this Login allowed to view the edit screen of this issue
+				// Is this Login allowed to add an issue?
 				// ie are they a promoter of the related project?
-				var isAllowed = await Db.CheckIfLoginIdIsAllowedToEditThisProject(connectionString, loginId, Issue.ProjectId);
+				var isAllowed = await Db.CheckIfLoginIdIsAllowedToEditThisProject(connectionString, 
+					loginId, projectId);
 				if (!isAllowed) return LocalRedirect("/account/access-denied");
 			}
 
@@ -57,10 +57,9 @@ namespace VLL.Web.Pages.issue
 					Value = x.IssueStatusId.ToString(),
 					Text = x.Name
 				}).ToList();
-			SelectedIssueStatusId = Issue.IssueStatusId;
+			//SelectedIssueStatusId = Issue.IssueStatusId;
 
 			// regulator ddl - can be null
-
 			RegulatorOptions = new List<SelectListItem>
 			{
 				new SelectListItem("none","0")
@@ -75,7 +74,10 @@ namespace VLL.Web.Pages.issue
 				};
 				RegulatorOptions.Add(foo);
 			}
-			SelectedRegulatorId = Issue.RegulatorId;
+
+			var bar = await Db.GetProjectByProjectId(connectionString, projectId);
+			ProjectName = bar.Name;
+			ProjectId = projectId;
 
 			return Page();
 		}
@@ -83,7 +85,7 @@ namespace VLL.Web.Pages.issue
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see https://aka.ms/RazorPagesCRUD.
 		//public async Task<IActionResult> OnPostAsync(ProjectEditViewModel p)
-		public async Task<IActionResult> OnPostAsync()
+		public async Task<IActionResult> OnPostAsync(int projectId)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -113,9 +115,10 @@ namespace VLL.Web.Pages.issue
 				foo = (int)SelectedRegulatorId;
 			}
 
-			await Db.UpdateIssueByIssueId(connectionString, Issue, SelectedIssueStatusId, foo);
+			//await Db.UpdateIssueByIssueId(connectionString, Issue, SelectedIssueStatusId, foo);
+			var issueId = await Db.CreateIssueAndReturnIssueId(connectionString, Issue, SelectedIssueStatusId, foo, projectId);
 
-			return Redirect($"/issue/{p.IssueId}");
+			return Redirect($"/issue/{issueId}");
 		}
 	}
 }

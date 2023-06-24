@@ -17,28 +17,13 @@ namespace VLL.Web.Pages.issue
 
         public bool CanSeeEditButton { get; set; }
 
-        //public List<ProjectIssueViewModel> ListOfProjectIssuesViewModel { get; set; } = null!;
-
-        //public TimeSpan TotalTime { get; set; }
-        //public int QueueLength { get; set; }
-
-        //public List<LogSmall> Logs { get; set; } = null!;
-
-        //public string? WarningMessage { get; set; }
-
-        //public bool ResultsFileExists { get; set; }
-
-        //public ResultModel(FaceSearchFileProcessingChannel faceSearchFileMessageChannel, HateSpeechFileProcessingChannel hateSpeechFileProcessingChannel)
-        //{
-        //    _faceSearchFileMessageChannel = faceSearchFileMessageChannel;
-        //    _hateSpeechFileProcessingChannel = hateSpeechFileProcessingChannel;
-        //}
-
         public async Task<IActionResult> OnGetAsync(int issueId)
         {
             var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 
             var loginId = Helper.GetLoginIdAsInt(HttpContext);
+
+            IssueAllTablesViewModel = await Db.GetIssueByIssueId(connectionString, issueId);
 
             if (loginId == null)
             {
@@ -59,7 +44,8 @@ namespace VLL.Web.Pages.issue
                 else
                 {
                     // Is this loginId a Promoter of this project ie can they see the edit button?
-                    //CanSeeEditButton = await Db.CheckIfLoginIdCanSeeEditButtonForProjectId(connectionString, (int)loginId, projectId);
+                    CanSeeEditButton = await Db.CheckIfLoginIdCanSeeEditButtonForProjectId(connectionString, (int)loginId,
+                        IssueAllTablesViewModel.ProjectId);
                 }
             }
 
@@ -72,7 +58,6 @@ namespace VLL.Web.Pages.issue
             //if (!isAllowed) return LocalRedirect("/account/access-denied");
 
             //ProjectAllTablesViewModel = await Db.GetProjectByProjectId(connectionString, projectId);
-            IssueAllTablesViewModel = await Db.GetIssueByIssueId(connectionString, issueId);
 
             //ListOfProjectMembersViewModel = await Db.GetProjectMembersByProjectId(connectionString, projectId);
 

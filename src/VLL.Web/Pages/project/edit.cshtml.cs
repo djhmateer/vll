@@ -120,7 +120,6 @@ namespace VLL.Web.Pages.project
 			foo, p.ShortDescription, p.Description, p.Keywords, p.DateTimeCreatedUtc, p.ResearchNotes);
 
 			return Redirect($"/project/{p.ProjectId}");
-			//return RedirectToPage($"/project/4");
 		}
 	}
 }
