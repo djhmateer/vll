@@ -206,6 +206,7 @@ namespace VLL.Web
 	// used by /project/4
 	public record ProjectLinksViewModel(
  int? LinkId,
+ int ProjectId,
  string Url,
  string? Description
 );
@@ -1282,12 +1283,26 @@ string? ContactEmail
 
 			var result = await conn.QueryAsyncWithRetry<ProjectLinksViewModel>(@"
 
-            select l.LinkId, l.Url, l.Description
+            select l.LinkId, l.ProjectId, l.Url, l.Description
             from Link l
             where l.ProjectId = @ProjectId
             ", new { projectId });
 
 			return result.ToList();
+		}
+
+		public static async Task<ProjectLinksViewModel> GetLinkByLinkId(string connectionString, int linkId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<ProjectLinksViewModel>(@"
+
+            select l.LinkId, l.ProjectId, l.Url, l.Description
+            from Link l
+            where l.LinkId = @LinkId
+            ", new { linkId });
+
+			return result.SingleOrDefault();
 		}
 
 		public static async Task<List<ProjectIssueViewModel>> GetIssuesByProjectId(string connectionString, int projectId, bool getPrivateIssues)
@@ -1598,6 +1613,39 @@ string? ContactEmail
 				response = issue.Response
 			});
 			return result.Single();
+		}
+
+		public static async Task<int> CreateLinkAndReturnLinkId(string connectionString, ProjectLinksViewModel link, int projectId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<int>(@"
+              INSERT INTO [dbo].[Link]
+           ([ProjectId]
+           ,[Url]
+           ,[Description])
+           output inserted.LinkId
+           VALUES
+           (@ProjectId
+			,@Url
+            ,@Description
+			)", new
+			{
+				projectId,
+				url = link.Url,
+				description = link.Description,
+			});
+			return result.Single();
+		}
+
+		public static async Task DeleteLinkByLinkId(string connectionString, int? linkId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.ExecuteAsyncWithRetry(@"
+				delete from link
+				where linkId = @LinkId
+                ", new { linkId });
 		}
 
 		//**HRE put in Peroject

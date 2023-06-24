@@ -83,7 +83,7 @@
 	<p>Lorem ipsum</p>
 	@if (Model.CanSeeEditButton)
 	{
-		<p><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Add Link</a></p>
+		<p><a href="/link/create?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Add Link</a></p>
 	}
 	<table class="table table-hover">
 		<thead>
@@ -101,7 +101,7 @@
 					<td>@p.Description</td>
 					@if (Model.CanSeeEditButton)
 					{
-						<td><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn ">Remove Link</a></td>
+						<td><a href="/link/delete?linkId=@p.LinkId" class="btn ">Remove Link</a></td>
 					}
 				</tr>
 			}
