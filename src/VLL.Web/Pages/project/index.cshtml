@@ -46,8 +46,8 @@
 	<p>Lorem ipsum</p>
 	@if (Model.CanSeeEditButton)
 	{
-		<p><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Add Existing Member</a></p>
-		<p><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Invite new Member</a></p>
+		<p><a href="/member/add?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Add Member</a></p>
+		@*<p><a href="/project/edit?projectId=@Model.ProjectAllTablesViewModel.ProjectId" class="btn btn-blue">Invite new Member</a></p>*@
 	}
 	<table class="table table-hover">
 		<thead>

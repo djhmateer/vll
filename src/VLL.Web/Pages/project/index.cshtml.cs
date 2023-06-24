@@ -79,8 +79,7 @@ namespace VLL.Web.Pages.Project
 
 			ListOfProjectLinksViewModel = await Db.GetLinksByProjectId(connectionString, projectId);
 
-			var getPrivateIssues = false;
-			if (isAdmin) getPrivateIssues = true; 
+			var getPrivateIssues = CanSeeEditButton;
 			ListOfProjectIssuesViewModel = await Db.GetIssuesByProjectId(connectionString, projectId, getPrivateIssues);
 
 			//string? jobStatusString = job.JobStatusId switch

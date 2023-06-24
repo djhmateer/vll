@@ -10,25 +10,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Polly;
 using Serilog;
 
-namespace VLL.Web.Pages.issue
+namespace VLL.Web.Pages.member
 {
 	[Authorize(Roles = "Tier1, Tier2, Admin")]
-	public class createModel : PageModel
+	public class addModel : PageModel
 	{
+		[BindProperty]
+		public int SelectedLoginId { get; set; }
+		public List<SelectListItem> LoginOptions { get; set; } = null!;
 
 		[BindProperty]
-		public IssueEditViewModel Issue { get; set; } = default!;
-
-		[BindProperty]
-		public int SelectedIssueStatusId { get; set; }
-		public List<SelectListItem> IssueStatusOptions { get; set; } = null!;
-
-		[BindProperty]
-		public int? SelectedRegulatorId { get; set; }
-		public List<SelectListItem> RegulatorOptions { get; set; } = null!;
-
-		public string ProjectName { get; set; } = default!;
-		public int ProjectId { get; set; } = default!;
+		public int ProjectId { get; set; }
 
 		public async Task<IActionResult> OnGetAsync(int projectId)
 		{
@@ -41,44 +33,26 @@ namespace VLL.Web.Pages.issue
 			if (isAdmin) { }
 			else
 			{
-				// Is this Login allowed to add an issue?
+				// Is this Login allowed to add members to project? 
 				// ie are they a promoter of the related project?
 				var isAllowed = await Db.CheckIfLoginIdIsAllowedToEditThisProject(connectionString, 
 					loginId, projectId);
 				if (!isAllowed) return LocalRedirect("/account/access-denied");
 			}
 
+			var p = await Db.GetLoginsNotInProject(connectionString, projectId);
 
-			// issue status ddl 
-			var issueStatuses = await Db.GetAllIssueStatuses(connectionString);
-			IssueStatusOptions = issueStatuses.Select(x =>
+			LoginOptions = p.Select(x =>
 				new SelectListItem
 				{
-					Value = x.IssueStatusId.ToString(),
-					Text = x.Name
+					Value = x.LoginId.ToString(),
+					Text = x.Email
 				}).ToList();
 			//SelectedIssueStatusId = Issue.IssueStatusId;
 
-			// regulator ddl - can be null
-			RegulatorOptions = new List<SelectListItem>
-			{
-				new SelectListItem("none","0")
-			};
-			var regulators = await Db.GetAllRegulators(connectionString);
-			foreach (var r in regulators)
-			{
-				var foo = new SelectListItem
-				{
-					Value = r.RegulatorId.ToString(),
-					Text = r.Name
-				};
-				RegulatorOptions.Add(foo);
-			}
 
-			var bar = await Db.GetProjectByProjectId(connectionString, projectId);
-			ProjectName = bar.Name;
-
-			ProjectId = projectId;
+			//ProjectName = p.Name;
+			//ProjectId = projectId;
 
 			return Page();
 		}
@@ -88,36 +62,26 @@ namespace VLL.Web.Pages.issue
 		//public async Task<IActionResult> OnPostAsync(ProjectEditViewModel p)
 		public async Task<IActionResult> OnPostAsync(int projectId)
 		{
-			if (!ModelState.IsValid)
-			{
-				return Page();
-			}
+			//if (!ModelState.IsValid)
+			//{
+			//	return Page();
+			//}
 
 			var connectionString = AppConfiguration.LoadFromEnvironment().ConnectionString;
 			var loginId = Helper.GetLoginIdAsInt(HttpContext);
-			var p = Issue;
 
 			bool isAdmin = Helper.IsAdmin(HttpContext);
 
 			if (isAdmin) { }
 			else
 			{
-				// Is this Login allowed to view the edit screen of this issue
+				// Is this Login allowed to add member? 
 				// ie are they a promoter of the related project?
 				var isAllowed = await Db.CheckIfLoginIdIsAllowedToEditThisProject(connectionString, loginId, projectId);
 				if (!isAllowed) return LocalRedirect("/account/access-denied");
 			}
 
-			// regulator ddl
-			int? foo = null;
-			if (SelectedRegulatorId == 0) { }
-			else
-			{
-				foo = (int)SelectedRegulatorId;
-			}
-
-			//await Db.UpdateIssueByIssueId(connectionString, Issue, SelectedIssueStatusId, foo);
-			var issueId = await Db.CreateIssueAndReturnIssueId(connectionString, Issue, SelectedIssueStatusId, foo, projectId);
+			await Db.AddLoginIdToProjectLogin(connectionString, SelectedLoginId, projectId);
 
 			return Redirect($"/project/{projectId}");
 		}

@@ -1,0 +1,65 @@
+﻿@page
+@model VLL.Web.Pages.member.addModel
+
+<div class="container-tool">
+	<h1>Add Member</h1>
+
+
+	<div class="row">
+		<div class="col-md-8">
+			<form method="post">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="hidden" asp-for="ProjectId" />
+
+				@*	<input type="hidden" asp-for="ProjectId" />
+
+				<div class="form-group col-xs-4">
+				<p>@Model.ProjectName</p>
+				<small id="emailHelp" class="form-text text-muted">The project you are adding a member to</small>
+				</div>
+				<br />
+
+				<div class="form-group col-xs-4">
+				<label asp-for="Link.Url" class="control-label"></label>
+				<input asp-for="Link.Url" class="form-control " />
+				<span asp-validation-for="Link.Url" class="text-danger"></span>
+				<small id="emailHelp" class="form-text text-muted">Url eg https://www.google.com</small>
+				</div>
+				<br />
+
+
+				<div class="form-group">
+				<label asp-for="Link.Description" class="control-label"></label>
+				<textarea asp-for="Link.Description" class="form-control" rows="5"></textarea>
+				<span asp-validation-for="Link.Description" class="text-danger"></span>
+				<small id="emailHelp" class="form-text text-muted">Keep it short</small>
+				</div>
+				<br />*@
+
+				<div class="form-group">
+					@*<label asp-for="Issue.IssueStatusId" class="control-label"></label>*@
+					<label class="control-label">Add</label>
+					<select asp-for="SelectedLoginId" class="form-control" asp-items="Model.LoginOptions"></select>
+					<span asp-validation-for="SelectedLoginId" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Select login to add that isn't in the project already'</small>
+				</div>
+				<br />
+
+				<div class="form-group">
+					<input type="submit" value="Save" class="btn btn-blue" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<br />
+	@*	<div>
+	<a href="/project/@Model.Project.ProjectId">Back to Project</a>
+	</div>*@
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

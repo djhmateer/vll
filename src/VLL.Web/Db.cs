@@ -88,6 +88,10 @@ namespace VLL.Web
 	 );
 
 
+	public record LoginMemberVM(
+		int LoginId,
+		string Email
+		);
 
 
 
@@ -1646,6 +1650,34 @@ string? ContactEmail
 				delete from link
 				where linkId = @LinkId
                 ", new { linkId });
+		}
+
+		public static async Task<List<LoginMemberVM>> GetLoginsNotInProject(string connectionString, int projectId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			// https://stackoverflow.com/a/5676632/26086
+			var result = await conn.QueryAsyncWithRetry<LoginMemberVM>(@"
+                select l.LoginId, l.Email
+                from Login l
+				left join ProjectLogin pl on pl.LoginId = l.LoginId
+				where pl.ProjectLoginId IS NULL
+                ");
+
+			return result.ToList();
+		}
+
+		public static async Task AddLoginIdToProjectLogin(string connectionString, int selectedLoginId,
+			int projectId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.ExecuteAsyncWithRetry(@"
+				insert into ProjectLogin
+				(ProjectId, LoginId)
+				values
+				(@ProjectId, @LoginId)
+                ", new { projectId, loginId = selectedLoginId });
 		}
 
 		//**HRE put in Peroject
