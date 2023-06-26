@@ -1680,6 +1680,36 @@ string? ContactEmail
                 ", new { projectId, loginId = selectedLoginId });
 		}
 
+		public static async Task<ProjectMembersViewModel> GetLoginByProjectIdAndLoginId(
+			string connectionString, int projectId, int? loginId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<ProjectMembersViewModel>(@"
+
+            select l.LoginId, l.Email
+            from Login l 
+            join ProjectLogin pl on pl.LoginId = l.LoginId
+            where pl.ProjectId = @ProjectId 
+			and l.LoginId = @LoginId
+
+            ", new { projectId, loginId });
+
+			return result.SingleOrDefault();
+		}
+
+		public static async Task DeleteProjectLoginByProjectIdAndLoginId(string connectionString, 
+			int projectId, int? loginId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.ExecuteAsyncWithRetry(@"
+				delete from ProjectLogin
+				where projectId = @ProjectId
+				and loginId = @LoginId
+                ", new { projectId, loginId });
+		}
+
 		//**HRE put in Peroject
 		//GetProjectByProjectId
 

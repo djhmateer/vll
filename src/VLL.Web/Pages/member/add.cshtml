@@ -41,10 +41,12 @@
 					<label class="control-label">Add</label>
 					<select asp-for="SelectedLoginId" class="form-control" asp-items="Model.LoginOptions"></select>
 					<span asp-validation-for="SelectedLoginId" class="text-danger"></span>
-					<small id="emailHelp" class="form-text text-muted">Select login to add that isn't in the project already'</small>
+					<small id="emailHelp" class="form-text text-muted">Select login to add that isn't in the project already</small>
 				</div>
 				<br />
+				<p>If this is a new user who is not in the system, please email them and ask them to register on this link: <br /> https://arlawesi.org.uk/account/register </p>
 
+				<br />
 				<div class="form-group">
 					<input type="submit" value="Save" class="btn btn-blue" />
 				</div>

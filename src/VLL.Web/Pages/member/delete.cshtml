@@ -1,0 +1,49 @@
+﻿@page
+@model VLL.Web.Pages.member.DeleteModel
+
+<div class="container-tool">
+	<h1>Delete Login from Project - are you sure?</h1>
+
+
+	<div class="row">
+		<div class="col-md-8">
+			<form method="post">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+				<input type="hidden" asp-for="ProjetLoginViewModel.LoginId" />
+				<input type="hidden" asp-for="@Model.ProjectId" />
+@*
+				<div class="form-group col-xs-4">
+					<label class="control-label">Associated Project</label>
+					<p>@Model.ProjectName</p>
+					<small id="emailHelp" class="form-text text-muted">The project you are creating a link for</small>
+				</div>
+				<br />*@
+
+				<div class="form-group col-xs-4">
+					<label asp-for="ProjetLoginViewModel.Email" class="control-label"></label>
+					<input asp-for="ProjetLoginViewModel.Email" class="form-control " readonly />
+					<span asp-validation-for="ProjetLoginViewModel.Email" class="text-danger"></span>
+				</div>
+				<br />
+
+@*
+				<div class="form-group">
+					<label asp-for="Link.Description" class="control-label"></label>
+					<textarea asp-for="Link.Description" class="form-control" rows="5" readonly></textarea>
+					<span asp-validation-for="Link.Description" class="text-danger"></span>
+				</div>
+				<br />*@
+
+				<div class="form-group">
+					<input type="submit" value="Delete" class="btn btn-blue" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<br />
+	@*	<div>
+	<a href="/project/@Model.Project.ProjectId">Back to Project</a>
+	</div>*@
+</div>
