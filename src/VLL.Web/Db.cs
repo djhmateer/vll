@@ -1735,11 +1735,11 @@ string? ContactEmail
 
             select l.LoginId, l.Email, x.ContactNumber, x.InstitutionName, x.ProfileUrl, x.Name
             from Login l
-            join ProjectLogin pl on l.LoginId = pl.LoginId
 			left join Person x on x.LoginId = l.LoginId
             where l.LoginId = @LoginId 
             ", new { loginId });
 
+			// will error if more than one element
 			return result.SingleOrDefault();
 		}
 
@@ -1781,11 +1781,12 @@ string? ContactEmail
 				// do an insert
 				var result = await conn.ExecuteAsyncWithRetry(@"
 				insert into Person
-				(ContactNumber, InstitutionName, ProfileUrl, Name)
+				(LoginId, ContactNumber, InstitutionName, ProfileUrl, Name)
 				values
-				(@ContactNumber, @InstitutionName, @ProfileUrl, @Name)
+				(@LoginId, @ContactNumber, @InstitutionName, @ProfileUrl, @Name)
                 ", new
 				{
+					loginAndPerson.LoginId,										
 					loginAndPerson.ContactNumber,
 					loginAndPerson.InstitutionName,
 					loginAndPerson.ProfileUrl,
