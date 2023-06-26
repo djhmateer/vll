@@ -14,8 +14,8 @@ namespace VLL.Web.Pages.account
     {
         [BindProperty]
         [DataType(DataType.Password)]
-        //[StringLength(100, ErrorMessage = "Must be at least {2} characters, and have at least 1 capital letter", MinimumLength = 8)]
-        [StringLength(100, ErrorMessage = "Must be at least {2} characters, and have at least 1 capital letter", MinimumLength = 1)]
+        [StringLength(100, ErrorMessage = "Must be at least {2} characters, and have at least 1 capital letter", MinimumLength = 8)]
+        //[StringLength(100, ErrorMessage = "Must be at least {2} characters, and have at least 1 capital letter", MinimumLength = 1)]
         public string NewPassword { get; set; } = null!;
 
 
