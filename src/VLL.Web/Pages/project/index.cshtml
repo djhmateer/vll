@@ -53,6 +53,8 @@
 		<thead>
 			<tr>
 				<th scope="col">Email</th>
+				<th scope="col">Profile</th>
+				<th scope="col">Institution</th>
 				@*<th scope="col"></th>*@
 				@* <th scope="col">Name</th>
 				<th scope="col">Phone</th>
@@ -64,6 +66,8 @@
 			{
 				<tr>
 					<td><a href="/project/">@p.Email</a></td>
+					<td><a href="@p.ProfileUrl">@p.ProfileUrl</a></td>
+					<td>@p.InstitutionName</td>
 					@if (Model.CanSeeEditButton)
 					{
 						<td><a href="/member/delete?projectId=@Model.ProjectAllTablesViewModel.ProjectId&loginId=@p.LoginId" class="btn ">Remove Member</a></td>

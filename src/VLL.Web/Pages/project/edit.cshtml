@@ -4,10 +4,6 @@
 <div class="container-tool">
 	<h1>Edit Project</h1>
 
-	@*<h4>Project</h4>*@
-	@*<hr />*@
-
-
 	<div class="row">
 		<div class="col-md-8">
 			<form method="post">
@@ -62,8 +58,6 @@
 
 				<div class="form-group">
 					<label asp-for="Project.Description" class="control-label"></label>
-					@*<input asp-for="Project.Description" class="form-control" />*@
-					@*<textarea asp-for="Project.Description" />@Model.Project.Description</textarea>*@
 					<textarea asp-for="Project.Description" class="form-control" rows="15"></textarea>
 					<span asp-validation-for="Project.Description" class="text-danger"></span>
 					<small id="emailHelp" class="form-text text-muted">Can include html eg &lt;br /&gt; to break up paragraphs</small>
@@ -81,9 +75,7 @@
 
 
 				<div class="form-group">
-					@*<label asp-for="Project.ResearchNotes" class="control-label"></label>*@
 					<label class="control-label">Notes</label>
-					@*<input asp-for="Project.ResearchNotes" class="form-control" />*@
 					<textarea asp-for="Project.ResearchNotes" class="form-control" rows="10"></textarea>
 					<span asp-validation-for="Project.ResearchNotes" class="text-danger"></span>
 					<small id="emailHelp" class="form-text text-muted">Can include html eg &lt;br /&gt; to break up paragraphs</small>
@@ -100,7 +92,6 @@
 				<br />
 
 				<div class="form-group">
-					@*<input type="submit" value="Save" class="btn btn-primary" />*@
 					<input type="submit" value="Save" class="btn btn-blue" />
 				</div>
 			</form>
@@ -109,8 +100,6 @@
 
 	<br />
 	<div>
-		@*<a asp-page="/">Back to List</a>*@
-		@*<a asp-page="/project/@Model.Project.ProjectId">Back to Project</a>*@
 		<a href="/project/@Model.Project.ProjectId">Back to Project</a>
 	</div>
 </div>

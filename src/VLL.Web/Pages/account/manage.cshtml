@@ -1,7 +1,7 @@
 ﻿@page
 @model ManageLoginModel
 @{
-    ViewData["Title"] = "Manage";
+	ViewData["Title"] = "Manage";
 }
 
 @*@section Styles {
@@ -9,19 +9,86 @@
 }*@
 
 <div class="container-tool">
+	<h4>Hello @Model.Email</h4>
+	<br />
 
-    @*<h1>@ViewData["Title"]</h1>*@
-    @*<hr />*@
-    <h4>Hello @Model.Email</h4>
-    <br />
-    <p>You are on access level: @Model.RoleLevel</p>
-    <p>If you want to change your password please <a href="/account/forgot-password">Do a forgot password reset</a>. </p>
+	@if (Model.DisplaySuccessSave)
+	{
+		<h2 class="text-xl text-green">Save Success</h2>
+	}
+	<p>You are on access level: @Model.RoleLevel</p>
+	<p>If you want to change your password please <a href="/account/forgot-password">Do a forgot password reset</a>. </p>
 
+	<br />
+
+	<div class="row">
+		<div class="col-md-8">
+			<form method="post">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+				<input type="hidden" asp-for="LoginAndPerson.LoginId" />
+
+				<div class="form-group col-xs-4">
+					<label asp-for="LoginAndPerson.Email" class="control-label"></label>
+					<input asp-for="LoginAndPerson.Email" class="form-control " readonly />
+					<span asp-validation-for="LoginAndPerson.Email" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">To change your email please register again</small>
+				</div>
+
+				<div class="form-group col-xs-4">
+					<label asp-for="LoginAndPerson.Name" class="control-label"></label>
+					<input asp-for="LoginAndPerson.Name" class="form-control " />
+					<span asp-validation-for="LoginAndPerson.Name" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">Name will be displayed on public site</small>
+				</div>
+				<br />
+
+				<div class="form-group">
+					<label asp-for="LoginAndPerson.ProfileUrl" class="control-label"></label>
+					<textarea asp-for="LoginAndPerson.ProfileUrl" class="form-control" rows="2"></textarea>
+					@*<input asp-for="LoginAndPerson.ProfileUrl" class="form-control" />*@
+					<span asp-validation-for="LoginAndPerson.ProfileUrl" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">eg https://davemateer.com/about</small>
+				</div>
+				<br />
+
+
+				<div class="form-group">
+					<label asp-for="LoginAndPerson.InstitutionName" class="control-label"></label>
+					<textarea asp-for="LoginAndPerson.InstitutionName" class="form-control" rows="2"></textarea>
+					@*<input asp-for="LoginAndPerson.ProfileUrl" class="form-control" />*@
+					<span asp-validation-for="LoginAndPerson.InstitutionName" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">eg University of Swansea</small>
+				</div>
+				<br />
+
+
+				<div class="form-group">
+					<label asp-for="LoginAndPerson.ContactNumber" class="control-label"></label>
+					<input asp-for="LoginAndPerson.ContactNumber" class="form-control" />
+					<span asp-validation-for="LoginAndPerson.ContactNumber" class="text-danger"></span>
+					<small id="emailHelp" class="form-text text-muted">eg 07111 111111 or +44 7222 222222</small>
+				</div>
+				<br />
+
+				<br />
+
+				<div class="form-group">
+					<input type="submit" value="Save" class="btn btn-blue" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<br />
+	@*	<div>
+	<a href="/">Back Home</a>
+	</div>*@
 </div>
 
-
-@*@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    }*@
-
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
 

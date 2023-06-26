@@ -47,19 +47,19 @@ namespace VLL.Web.Pages
 			if (Status == "challenge")
 			{
 				statusId = 1;
-				PageTitle = "Challenges";
+				PageTitle = "All Challenges";
 			}
 
 			if (Status == "ongoing")
 			{
 				statusId = 2;
-				PageTitle = "Ongoing Projects";
+				PageTitle = "All Ongoing Projects";
 			}
 
 			if (Status == "completed")
 			{
 				statusId = 3;
-				PageTitle = "Completed Projects";
+				PageTitle = "All Completed Projects";
 			}
 
 			var isAdmin = Helper.IsAdmin(HttpContext);

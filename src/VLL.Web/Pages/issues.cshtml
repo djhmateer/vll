@@ -11,7 +11,7 @@
 <div class="container-tool">
 
     <div class="text-center">
-        <h1>Regulatory Issues</h1>
+        <h1>All Regulatory Issues</h1>
     </div>
 
     <br />
@@ -21,6 +21,7 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
+                <th scope="col">Regulator</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +30,7 @@
                 <tr>
                     <td><a href="/issue/@p.IssueId">@p.Name</a></td>
                     <td>@p.Description</td>
+                    <td>@p.RegulatorName</td>
                 </tr>
             }
         </tbody>

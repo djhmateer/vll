@@ -167,7 +167,8 @@ namespace VLL.Web
 	// not nullable in db, but useful for this concept of initiating
 	int? IssueId,
 	string Name,
-	string Description
+	string Description,
+	string? RegulatorName
 	);
 
 	// used by /projects
@@ -204,7 +205,19 @@ namespace VLL.Web
 	// used by /project/4
 	public record ProjectMembersViewModel(
  int? LoginId,
- string Email
+ string Email,
+ string? InstitutionName,
+ string? ProfileUrl
+);
+
+	// used by /account/manage/1
+	public record LogindAndPerson(
+ int? LoginId,
+ string Email,
+ string? ContactNumber,
+ string? InstitutionName,
+ string? ProfileUrl,
+ string? Name
 );
 
 	// used by /project/4
@@ -1155,8 +1168,9 @@ string? ContactEmail
 			using var conn = GetOpenConnection(connectionString);
 
 			var result = await conn.QueryAsyncWithRetry<IssueViewModel>(@"
-                select IssueId, Name, Description
-                from Issue 
+                select i.IssueId, i.Name, i.Description, r.Name as RegulatorName
+                from Issue i
+				left join Regulator r on r.RegulatorId = i.RegulatorId
                 order by DateTimeCreatedUtc desc
                 ");
 
@@ -1168,9 +1182,10 @@ string? ContactEmail
 			using var conn = GetOpenConnection(connectionString);
 
 			var result = await conn.QueryAsyncWithRetry<IssueViewModel>(@"
-                select IssueId, Name, Description
-                from Issue 
-                where IsPublic = 1
+                select i.IssueId, i.Name, i.Description, r.Name as RegulatorName
+                from Issue i
+				left join Regulator r on r.RegulatorId = i.RegulatorId
+				where IsPublic = 1
                 order by DateTimeCreatedUtc desc
                 ");
 
@@ -1271,9 +1286,10 @@ string? ContactEmail
 
 			var result = await conn.QueryAsyncWithRetry<ProjectMembersViewModel>(@"
 
-            select l.LoginId, l.Email
+            select l.LoginId, l.Email, x.InstitutionName, x.ProfileUrl
             from Login l
             join ProjectLogin pl on l.LoginId = pl.LoginId
+			left join Person x on x.LoginId = l.LoginId
             where pl.ProjectId = @ProjectId
 
             ", new { projectId });
@@ -1579,7 +1595,7 @@ string? ContactEmail
 			});
 		}
 
-		public static async Task<int> CreateIssueAndReturnIssueId(string connectionString, IssueEditViewModel issue, int? issueStatusId, 
+		public static async Task<int> CreateIssueAndReturnIssueId(string connectionString, IssueEditViewModel issue, int? issueStatusId,
 			int? regulatorId, int projectId)
 		{
 			using var conn = GetOpenConnection(connectionString);
@@ -1698,7 +1714,7 @@ string? ContactEmail
 			return result.SingleOrDefault();
 		}
 
-		public static async Task DeleteProjectLoginByProjectIdAndLoginId(string connectionString, 
+		public static async Task DeleteProjectLoginByProjectIdAndLoginId(string connectionString,
 			int projectId, int? loginId)
 		{
 			using var conn = GetOpenConnection(connectionString);
@@ -1708,6 +1724,74 @@ string? ContactEmail
 				where projectId = @ProjectId
 				and loginId = @LoginId
                 ", new { projectId, loginId });
+		}
+
+		public static async Task<LogindAndPerson> GetLoginAndPersonByLoginId(string connectionString,
+			int? loginId)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			var result = await conn.QueryAsyncWithRetry<LogindAndPerson>(@"
+
+            select l.LoginId, l.Email, x.ContactNumber, x.InstitutionName, x.ProfileUrl, x.Name
+            from Login l
+            join ProjectLogin pl on l.LoginId = pl.LoginId
+			left join Person x on x.LoginId = l.LoginId
+            where l.LoginId = @LoginId 
+            ", new { loginId });
+
+			return result.SingleOrDefault();
+		}
+
+		public static async Task UpdateLoginAndPersonByLoginId(string connectionString, LogindAndPerson loginAndPerson)
+		{
+			using var conn = GetOpenConnection(connectionString);
+
+			// does the Person row exist yet for this login?
+			// upsert concept 
+			// https://stackoverflow.com/questions/108403/solutions-for-insert-or-update-on-sql-server
+			// keep it simple here
+
+			var foo = await conn.QueryAsyncWithRetry<int>(@"
+				select count(*) from Person where loginId = @LoginId
+			", new { loginAndPerson.LoginId });
+
+			bool personIsThere = foo.FirstOrDefault() != 0;
+			if (personIsThere)
+			{
+				// do an update
+				var result = await conn.ExecuteAsyncWithRetry(@"
+				update Person
+				set ContactNumber = @ContactNumber,
+					InstitutionName = @InstitutionName,
+					ProfileUrl = @ProfileUrl,
+					Name = @Name
+				where LoginId = @LoginId
+                ", new
+				{
+					loginAndPerson.LoginId,
+					loginAndPerson.ContactNumber,
+					loginAndPerson.InstitutionName,
+					loginAndPerson.ProfileUrl,
+					loginAndPerson.Name
+				});
+			}
+			else
+			{
+				// do an insert
+				var result = await conn.ExecuteAsyncWithRetry(@"
+				insert into Person
+				(ContactNumber, InstitutionName, ProfileUrl, Name)
+				values
+				(@ContactNumber, @InstitutionName, @ProfileUrl, @Name)
+                ", new
+				{
+					loginAndPerson.ContactNumber,
+					loginAndPerson.InstitutionName,
+					loginAndPerson.ProfileUrl,
+					loginAndPerson.Name
+				});
+			}
 		}
 
 		//**HRE put in Peroject
