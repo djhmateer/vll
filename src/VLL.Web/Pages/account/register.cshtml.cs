@@ -141,7 +141,7 @@ namespace VLL.Web.Pages.account
                 // Notify an admin that a new user has signed up
                 var notifyEmail = new OSREmail(
                     ToEmailAddress: "dave@hmsoftware.co.uk",
-                    Subject: "New User Registered",
+                    Subject: "New User Registered (arlawesi)",
                     TextBody: $"New User Registered on OSR {Email}",
                     HtmlBody: $"New User Registered on OSR {Email}"
                 );
