@@ -10,6 +10,7 @@ namespace VLL.Web.Pages
 
         public void OnGet()
         {
+            Log.Information("contact information form hit onget");
         }
 
         [HttpPost]
