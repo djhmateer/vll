@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Serilog;
 
 namespace VLL.Web.Pages
 {
@@ -15,6 +16,12 @@ namespace VLL.Web.Pages
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPost(string? email, string? message)
         {
+            // was getting lots of spam posted to this unused method so lets log it
+            // to make sure we're getting all of it
+            Log.Warning($"email is {email}");
+            Log.Warning($"message is {message}");
+            return LocalRedirect("/email-fail");
+
             // could do a lot of modelstate validation here
             if (string.IsNullOrEmpty(email))
                 return LocalRedirect("/email-fail");
