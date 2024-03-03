@@ -16,7 +16,9 @@ namespace VLL.Web.Pages
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPost(string? email, string? message)
+
         {
+            Log.Information("foo onpost info");
             // was getting lots of spam posted to this unused method so lets log it
             // to make sure we're getting all of it
             Log.Warning($"email is {email}");
@@ -34,7 +36,7 @@ namespace VLL.Web.Pages
             // send confirmation to the person who just submitted email on site
             {
                 var ToEmailAddress = email;
-                var subject = "Thank you";
+                var subject = "Thank youxxx";
                 var text = "Thank you - we will get back to you soon";
                 var html = "Thank you - we will get back to you soon";
                 var foo = new OSREmail(ToEmailAddress, subject, text, html);
@@ -44,7 +46,7 @@ namespace VLL.Web.Pages
             // send email to the admin 
             {
                 var ToEmailAddress = "dave@hmsoftware.co.uk";
-                var subject = "auto-archiver message";
+                var subject = "auto-archiver messagexxx";
                 var text = $"sender is: {email}, message is: {message}";
                 var html = $"sender is: {email}, message is: {message}";
                 var foo = new OSREmail(ToEmailAddress, subject, text, html);
